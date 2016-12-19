@@ -1,0 +1,22 @@
+{
+  "name": "draalcore",
+  "version": "0.0.1",
+  "description": "Draal core for Python",
+  "scripts": {
+    "build": "python setup.py build",
+    "lint": "gulp lint",
+    "prepare": "pip install -r requirements.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "python",
+    "django",
+    "ReST"
+  ],
+  "author": "Juha Ojanpera juha.ojanpera@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-shell": "^0.5.2"
+  }
+}
