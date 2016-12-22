@@ -3,7 +3,6 @@
 """Base serializer object class with paging and search support"""
 
 # System imports
-import time
 import logging
 from math import floor
 from django.db.models.query import QuerySet
@@ -12,8 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, Page
 # Project imports
 from .req_query import QueryRequest
 from draalcore.factory import Factory
-from .response_data import ResponseData
-from draalcore.rest.model import ModelContainer, SerializerFinder
+from draalcore.rest.model import SerializerFinder
 from draalcore.exceptions import RestApiException, ModelManagerError
 
 

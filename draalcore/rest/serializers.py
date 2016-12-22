@@ -3,14 +3,13 @@
 """Data serialization handler for ReST API"""
 
 # System imports
-import time
 import logging
 
 # Project imports
 from .handlers import GetMixin, RestAPIBasicAuthView
 from .response_data import ResponseData
 from draalcore.rest.model import ModelContainer
-from draalcore.rest.serializer_object import (SerializerDataObject, SerializerModelDataObject, SerializerDataItemObject,
+from draalcore.rest.serializer_object import (SerializerDataObject, SerializerDataItemObject,
                                               SerializerModelMetaObject)
 from draalcore.rest.serializer_history_object import SerializerDataItemHistoryObject
 

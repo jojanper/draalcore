@@ -3,7 +3,6 @@
 """Data serializers"""
 
 # System imports
-import sys
 import json
 import logging
 from rest_framework import serializers

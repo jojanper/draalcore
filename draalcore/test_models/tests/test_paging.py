@@ -3,7 +3,6 @@
 """Model data pagination and search tests"""
 
 # System imports
-import sys
 import logging
 from mock import patch, PropertyMock
 

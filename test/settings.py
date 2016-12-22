@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 """Django settings for the test project"""
 
-__author__= "Juha Ojanpera"
-__copyright__ = "Copyright 2013-2016"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
 import os
 import sys
 import json
+
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2013-2016"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 # Location of the module
 pyFile = os.path.abspath(__file__)
@@ -120,7 +120,7 @@ SOCIAL_AUTH_USER_PASSWORD = '!social_auth'
 #
 LOGIN_EXEMPT_URLS = (
     r'^admin',
-    r'^$', # allow the root to be viewed by all
+    r'^$',  # allow the root to be viewed by all
 )
 
 #
@@ -129,7 +129,7 @@ LOGIN_EXEMPT_URLS = (
 USER_EMAIL_REDIRECT = 'settings-view'
 
 # Auto logout delay in seconds
-AUTO_LOGOUT_DELAY = 60 * 60 # equivalent to 60 minutes
+AUTO_LOGOUT_DELAY = 60 * 60  # equivalent to 60 minutes
 
 
 #
@@ -281,5 +281,5 @@ INSTALLED_APPS = (
     'draalcore.test_models'
 )
 
-from .ui_applications import *
-from local_settings import *
+from .ui_applications import *  # noqa
+from local_settings import *  # noqa

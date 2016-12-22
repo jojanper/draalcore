@@ -4,9 +4,7 @@
 
 # System imports
 import sys
-import six
 import logging
-import inspect
 import importlib
 from django.db import models
 from django.conf import settings
@@ -109,7 +107,7 @@ class EditAction(BaseAction):
     def execute(self):
         try:
             model_obj = self.model_cls.objects.get(id=self.request_obj.kwargs['id'])
-        except self.model_cls.DoesNotExist as e:
+        except self.model_cls.DoesNotExist:
             raise DataParsingError('ID {} does not exist'.format(self.request_obj.kwargs['id']))
 
         return self._execute(model_obj)
@@ -474,8 +472,8 @@ class ModelsListingHandler(GetMixin, RestAPIBasicAuthView):
         # These are UI only application views but enabled from backend
         if hasattr(settings, 'UI_APPLICATION_MODELS'):
             for item in settings.UI_APPLICATION_MODELS:
-                for app, models in item.iteritems():
-                    for model in models:
+                for app, _models in item.iteritems():
+                    for model in _models:
                         data.append({'app_label': app, 'model': model['name'], 'actions': {}})
 
         return ResponseData(data)

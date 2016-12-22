@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 """Login related middleware processors"""
 
+# System imports
+from re import compile
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.conf import settings
+from datetime import datetime, timedelta
+from django.contrib import auth
+
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2013-2016"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
-
-# System imports
-from re import compile
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.conf import settings
-from datetime import datetime, timedelta
-from django.contrib import auth
 
 
 EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]

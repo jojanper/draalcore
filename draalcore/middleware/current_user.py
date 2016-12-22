@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 """Middleware for storing current user"""
 
+from threading import local
+
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2014"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
-
-
-from threading import local
 
 _thread_locals = local()
 

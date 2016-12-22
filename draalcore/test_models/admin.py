@@ -12,9 +12,11 @@ from draalcore.models.base_admin import BaseAdmin
 
 class TestModelAdmin(BaseAdmin):
     pass
-admin.site.register(TestModel, TestModelAdmin)
 
 
 class TestModel2Admin(BaseAdmin):
     pass
+
+
+admin.site.register(TestModel, TestModelAdmin)
 admin.site.register(TestModel2, TestModel2Admin)

@@ -2,16 +2,15 @@
 # -*- coding: utf-8 -*-
 """Serializers for test models"""
 
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2015"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
-
 # Project imports
 from draalcore.rest.base_serializers import ModelSerializer
 from .models import TestModel, TestModel2, TestModel6
 from draalcore.rest.serializer_object import BaseSerializerObject
+
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2015"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 
 class TestModelSerializer(ModelSerializer):

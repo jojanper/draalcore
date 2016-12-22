@@ -5,9 +5,8 @@
 
 # System imports
 import sys
-import json
 from django.test import TestCase
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import User, Permission
 
 from draalcore.test_models.tests.utils.rest_api import GenericAPI
 

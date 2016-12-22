@@ -2,18 +2,16 @@
 # -*- coding: utf-8 -*-
 """ReST API URLs for testing"""
 
+# System imports
+from django.conf.urls import url
+
+from draalcore.rest.mixins import GetMixin, PutMixin, PostMixin, PatchMixin, DeleteMixin
+from draalcore.rest.handlers import FileUploadHandler, RestAPIBasicAuthView, AppActionsPermission
+
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2015"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
-
-
-# System imports
-from django.conf import settings
-from django.conf.urls import url, include
-
-from draalcore.rest.mixins import GetMixin, PutMixin, PostMixin, PatchMixin, DeleteMixin
-from draalcore.rest.handlers import FileUploadHandler, RestAPIBasicAuthView, AppActionsPermission
 
 
 class TestUploadHandler(FileUploadHandler):

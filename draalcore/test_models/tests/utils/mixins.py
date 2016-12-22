@@ -3,7 +3,6 @@
 """Mixins for testing."""
 
 # Project imports
-from .rest_api import GenericAPI
 from draalcore.test_models.models import TestModel, TestModel2, TestModel3, TestModel4, TestModel5
 
 

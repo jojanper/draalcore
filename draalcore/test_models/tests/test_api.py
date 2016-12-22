@@ -3,7 +3,7 @@
 """General ReST API related tests"""
 
 # System imports
-from mock import MagicMock, patch
+from mock import MagicMock
 
 # Project imports
 from ..models import TestModel

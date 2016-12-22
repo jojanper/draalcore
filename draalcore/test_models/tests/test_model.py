@@ -3,17 +3,12 @@
 """Model related tests"""
 
 # System imports
-import sys
 import logging
-import importlib
-import django
-from mock import patch, PropertyMock
 from django.db import models
-from django.conf import settings
 
 # Project imports
 from .utils.mixins import TestModelMixin
-from ..models import TestModel, TestModel2, TestModel3, TestModel4
+from ..models import TestModel, TestModel2
 from draalcore.rest.model import ModelContainer
 from draalcore.exceptions import ModelNotFoundError, ModelAccessDeniedError
 from draalcore.test_utils.basetest import BaseTest, BaseTestUser
@@ -226,7 +221,7 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
 
     def test_public_manager_call(self):
         """Public manager method is called"""
-        
+
         # GIVEN public access method to model's manager
 
         # WHEN fetching data listing using unsupported call method
@@ -260,7 +255,7 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
             self.assertEqual(len(keys), 3)
             self.assertEqual(keys, ['model', 'actions', 'app_label'])
 
-        # AND it contains also UI application models 
+        # AND it contains also UI application models
         self.assertTrue(any('test' in d['app_label'] for d in response.data))
 
     def test_repr(self):

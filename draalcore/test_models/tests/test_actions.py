@@ -5,7 +5,7 @@
 # System imports
 import logging
 import importlib
-from mock import patch, PropertyMock
+from mock import patch
 
 # Project imports
 from ..models import TestModel

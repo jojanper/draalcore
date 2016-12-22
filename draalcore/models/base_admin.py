@@ -5,8 +5,6 @@
 # System imports
 import logging
 from django.contrib import admin
-from django.core.urlresolvers import reverse
-from django.template.defaultfilters import escape
 
 
 logger = logging.getLogger(__name__)

@@ -82,7 +82,7 @@ class FileLoader(object):
         to app based upload handling.
         """
         obj = self.get_nginx_file()
-        name = self.request.POST.get('filename', obj.name)
+        obj.name = self.request.POST.get('filename', obj.name)
         obj.name = obj.name.replace('(', '').replace(')', '')
         return obj
 

@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 """Model mapping utilities"""
 
-
 # System imports
-import os
 import sys
 import inspect
 import logging
@@ -77,7 +75,7 @@ class ModelsCollection(object):
 
     @classmethod
     def serialize(cls):
-        return [dict(app_label=cls.app_label, model=cls.db_table) for cls in ModelsCollection()]
+        return [dict(app_label=_cls.app_label, model=_cls.db_table) for _cls in ModelsCollection()]
 
     def __iter__(self):
         """Model class meta iterator."""

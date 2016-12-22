@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 """Application version middleware"""
 
+# System imports
+from django.http import HttpResponse
+from django.conf import settings
+
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2015"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
-
-# System imports
-from django.http import HttpResponse
-from django.conf import settings
 
 
 # Name of cookie that describes the version code

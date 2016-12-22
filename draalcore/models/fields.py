@@ -2,27 +2,22 @@
 # -*- coding: utf-8 -*-
 """Custom model fields"""
 
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014-2015"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
 # System imports
 import six
-import sys
 import inspect
 import logging
-import django
 from itertools import chain
 from django.db import models
-from django.conf import settings
 from django.db.migrations import Migration
-from django.db.models.fields.related import ForeignObjectRel as RelatedObject
-from django.db.models import ManyToManyField, ForeignKey
+from django.db.models import ForeignKey
 
 # Project imports
 from draalcore.exceptions import DataParsingError
 
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2014-2015"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 logger = logging.getLogger(__name__)
 

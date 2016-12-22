@@ -8,7 +8,6 @@ import logging
 # Project imports
 from .req_query import QueryRequest
 from draalcore.factory import Factory
-from .response_data import ResponseData
 from draalcore.rest.base_serializers import HistorySerializer
 from draalcore.rest.serializer_object import SerializerDataItemObject, SerializerPaginatorMixin
 

@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mock import patch
 from django.conf import settings
 
 from ..file_download import FileDownloader
-from draalcore.test_utils.basetest import User
 from draalcore.test_utils.basetest import BaseTest
 from draalcore.test_models.tests.test_upload import TEST_FILE_IMAGE
 

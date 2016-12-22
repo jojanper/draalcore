@@ -4,7 +4,7 @@
 
 # Project imports
 from draalcore.exceptions import ActionError
-from ..rest.actions import CreateAction, EditAction, AbstractModelGetAction, AbstractModelItemGetAction
+from ..rest.actions import CreateAction, AbstractModelGetAction, AbstractModelItemGetAction
 from .models import TestModel, TestModel2
 
 

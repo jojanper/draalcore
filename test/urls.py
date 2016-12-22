@@ -2,27 +2,25 @@
 # -*- coding: utf-8 -*-
 """Test app URLs"""
 
+from django.contrib import admin
+from django.conf import settings
+from django.shortcuts import render
+from django.conf.urls import include, url
+
+from draalcore.views.baseviews import BaseView
+
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2013-2016"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
-#import logging
-from django.conf import settings
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.conf.urls import include, url
-
-from draalcore.views.baseviews import BaseView
-
-# Uncomment the next two lines to enable the admin:
-from django.contrib import admin
 admin.autodiscover()
+
 
 class SettingsView(BaseView):
     def get(self, request, *args, **kwargs):
         return render(request, '')
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),

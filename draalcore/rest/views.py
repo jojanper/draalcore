@@ -3,7 +3,6 @@
 """Base views, permissions and response definitions for ReST API"""
 
 # System imports
-import sys
 import logging
 from django.http.response import HttpResponseBase
 from rest_framework import status
@@ -18,7 +17,7 @@ from rest_framework.authentication import (SessionAuthentication,
 from draalcore.exceptions import AppException
 from draalcore.rest.request_data import RequestData
 from draalcore.rest.response_data import ResponseData
-from draalcore.rest.auth import RestAuthentication, SessionNoCSRFAuthentication
+from draalcore.rest.auth import RestAuthentication
 from draalcore.middleware.current_user import CurrentUserMiddleware
 
 

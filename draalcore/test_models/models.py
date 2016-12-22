@@ -2,11 +2,6 @@
 # -*- coding: utf-8 -*-
 """Test models"""
 
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
 # System imports
 from django.db import models
 
@@ -14,6 +9,11 @@ from django.db import models
 from draalcore.models.base_model import BaseModel, ModelLogger, ModelBaseManager
 from draalcore.models.fields import (AppModelCharField, AppModelForeignKey, AppModelManyToManyField,
                                      AppModelTextField, AppModelForeignObjectKey)
+
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2014"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 
 class TestModel(ModelLogger):
@@ -71,7 +71,7 @@ class TestModel2(ModelLogger):
     model2 = AppModelForeignKey(TestModel, optional=True, blank=True, null=True, related_name="model2")
     model3 = AppModelManyToManyField(TestModel, optional=True, blank=True, null=True, related_name="model3")
     meta = AppModelForeignObjectKey(TestModel, optional=True, null=True, blank=True,
-        help_text='Metadata information', label='Meta data')
+                                    help_text='Metadata information', label='Meta data')
     duration = models.FloatField(default=-1, blank=True, null=True)
 
     objects = TestModel2Manager()

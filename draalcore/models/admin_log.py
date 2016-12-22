@@ -7,7 +7,7 @@ Adapted from https://djangosnippets.org/snippets/2484/
 
 # System imports
 from django.contrib import admin
-from django.contrib.admin.models import LogEntry, DELETION
+from django.contrib.admin.models import DELETION
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import NoReverseMatch

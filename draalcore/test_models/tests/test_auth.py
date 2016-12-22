@@ -5,7 +5,6 @@
 import base64
 
 # System imports
-from .utils.rest_api import HttpAPI
 from .test_upload import FileUploadMixin
 from draalcore.test_utils.basetest import BaseTestUser
 

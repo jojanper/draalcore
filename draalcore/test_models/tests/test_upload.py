@@ -4,7 +4,6 @@
 
 # System imports
 import os
-from mock import patch
 
 # Project imports
 from .utils.rest_api import FileUploadAPI

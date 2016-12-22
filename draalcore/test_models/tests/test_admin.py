@@ -3,13 +3,7 @@
 """Model admin related tests"""
 
 # System imports
-import sys
 import logging
-import importlib
-import django
-from mock import patch, PropertyMock
-from django.db import models
-from django.conf import settings
 
 # Project imports
 from .utils.mixins import TestModelMixin

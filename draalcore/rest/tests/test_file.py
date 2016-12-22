@@ -9,7 +9,6 @@ import tempfile
 import shutil
 from mock import MagicMock, patch, mock_open
 from django.core.files.uploadedfile import UploadedFile
-from sys import version_info
 try:
     import builtins  # pylint:disable=import-error
 except ImportError:

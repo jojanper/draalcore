@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 """Base utility connection classes for testing."""
 
-
 # System imports
-import sys
 import json
 import httplib
 

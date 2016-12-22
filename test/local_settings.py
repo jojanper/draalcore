@@ -5,19 +5,19 @@
 from settings import MIDDLEWARE_CLASSES, INSTALLED_APPS
 
 # http://127.0.0.1:8000/?profile
-#MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.InstrumentMiddleware', )
+# MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.InstrumentMiddleware', )
 
 # http://127.0.0.1:8000/?profiler
-#MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.ProfileMiddleware', )
+# MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.ProfileMiddleware', )
 
 # http://127.0.0.1:8000/?__geordi__
-#MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.VisorMiddleware', )
+# MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.VisorMiddleware', )
 
 # http://127.0.0.1:8000/?__geordi__
-#MIDDLEWARE_CLASSES += ('draalcore.middleware.sql.SqldumpMiddleware', )
+# MIDDLEWARE_CLASSES += ('draalcore.middleware.sql.SqldumpMiddleware', )
 
 # Required for RPC4Django authenticated method calls
-#MIDDLEWARE_CLASSES += ('django.contrib.auth.middleware.RemoteUserMiddleware', )
+# MIDDLEWARE_CLASSES += ('django.contrib.auth.middleware.RemoteUserMiddleware', )
 
 middleware = 'django.middleware.csrf.CsrfViewMiddleware'
 if middleware in MIDDLEWARE_CLASSES:
@@ -52,8 +52,8 @@ if ENABLE_DEBUG_TOOLBAR:
         'debug_toolbar.panels.headers.HeadersPanel',
         'debug_toolbar.panels.request.RequestPanel',
         'debug_toolbar.panels.sql.SQLPanel',
-        #'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-        #'debug_toolbar.panels.templates.TemplatesPanel',
+        # 'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        # 'debug_toolbar.panels.templates.TemplatesPanel',
         'debug_toolbar.panels.signals.SignalsPanel',
         'debug_toolbar.panels.logging.LoggingPanel',
      ]

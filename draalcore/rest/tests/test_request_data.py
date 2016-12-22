@@ -3,9 +3,8 @@
 """RequestData tests"""
 
 # System imports
-import os
 import logging
-from mock import MagicMock, patch
+from mock import MagicMock
 
 # Project imports
 from ..request_data import RequestData

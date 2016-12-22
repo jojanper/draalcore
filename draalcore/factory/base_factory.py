@@ -2,17 +2,17 @@
 # -*- coding: utf-8 -*-
 """Factory interface"""
 
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2013"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
 # System imports
 from abc import ABCMeta
 from django.db.models.query import QuerySet
 
 # Project imports
 from draalcore.cache.cache import CacheBase
+
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2013"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 
 class QueryResult(object):

@@ -6,8 +6,7 @@
 import base64
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
-from rest_framework import authentication, exceptions
-from rest_framework import exceptions, HTTP_HEADER_ENCODING
+from rest_framework import authentication, exceptions, HTTP_HEADER_ENCODING
 
 
 class SessionNoCSRFAuthentication(authentication.SessionAuthentication):

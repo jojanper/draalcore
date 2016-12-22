@@ -2,11 +2,6 @@
 # -*- coding: utf-8 -*-
 """Manager implementations for application models"""
 
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014-2015"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
 # System imports
 import logging
 import inspect
@@ -15,10 +10,14 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 
 # Project imports
-from draalcore.models.fields import AppModelFieldParser, AppModelFieldParserIterator
+from draalcore.models.fields import AppModelFieldParserIterator
 from draalcore.middleware.current_user import get_current_user
 from draalcore.exceptions import DataParsingError, ModelManagerError
 
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2014-2015"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 logger = logging.getLogger(__name__)
 
@@ -157,7 +156,7 @@ class BaseManager(models.Manager, SearchMixin):
             cls = self.model._meta.get_field(field_name).rel.to
             return self.get_model(model=cls, model_kwargs=field_kwargs, only_fields=only_fields)
 
-        except ModelManagerError as e:
+        except ModelManagerError:
             msg = "Value %s for item '%s' does not exist" % (field_name, field_kwargs)
             raise DataParsingError(msg)
 

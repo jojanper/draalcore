@@ -3,10 +3,9 @@
 """Model serializer object related tests"""
 
 # System imports
-import sys
 import logging
 import importlib
-from mock import patch, PropertyMock, MagicMock
+from mock import patch, MagicMock
 
 # Project imports
 from ..models import TestModel2, TestModel5, TestModel6

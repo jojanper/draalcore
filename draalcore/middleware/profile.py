@@ -25,9 +25,19 @@ import cProfile
 import os
 import StringIO
 import pstats
+import marshal
 from django.core.exceptions import MiddlewareNotUsed
 from django.conf import settings
-import marshal
+import subprocess
+import tempfile
+
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.test.client import Client
+
+import hotshot
+
+import time
 
 
 class InstrumentMiddleware(object):
@@ -105,18 +115,6 @@ class ProfileMiddleware(object):
 
 
 """A Django middleware for interactive profiling"""
-
-import cProfile
-import marshal
-import os
-import subprocess
-import sys
-import tempfile
-
-from django.conf import settings
-from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.test.client import Client
 
 OUT_FORMAT = 'png'
 GPROF2PY_PATH = '/home/jojanper/work/python_snippets/profiling'
@@ -269,10 +267,6 @@ class VisorMiddleware(object):
         else:
             return self._profilenow(request)
 
-
-import hotshot
-import os
-import time
 
 PROFILE_LOG_BASE = os.path.dirname(os.path.abspath(__file__))
 

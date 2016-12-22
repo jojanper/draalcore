@@ -2,17 +2,13 @@
 # -*- coding: utf-8 -*-
 """Code locking using model based approach"""
 
+# System imports
+from django.db import models
+
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2013"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
-
-# System imports
-import os
-import json
-from django.db.models import Q
-from django.conf import settings
-from django.db import models, IntegrityError
 
 
 DEFAULT_LOCK = 'lock1'

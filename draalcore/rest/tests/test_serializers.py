@@ -3,9 +3,7 @@
 """Data serialization tests"""
 
 # System imports
-import os
-import logging
-from mock import MagicMock, patch, mock_open
+from mock import MagicMock
 
 # Project imports
 from draalcore.rest.serializers import SerializerMixin

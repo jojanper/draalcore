@@ -2,22 +2,15 @@
 # -*- coding: utf-8 -*-
 """Base model(s)"""
 
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014-2016"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
-
 # System imports
 import json
 import logging
 from copy import copy
 from django.utils import timezone
 from django.db import models, connection
-from django.db.models.query import QuerySet
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
 from django.core.urlresolvers import reverse
-from django.db.models import ManyToManyField, ForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.admin.models import ADDITION, LogEntry
 
@@ -26,6 +19,10 @@ from draalcore.models.base_manager import BaseManager
 from draalcore.middleware.current_user import get_current_user
 from draalcore.models.fields import AppModelFieldParser, AppModelCharField
 
+__author__ = "Juha Ojanpera"
+__copyright__ = "Copyright 2014-2016"
+__email__ = "juha.ojanpera@gmail.com"
+__status__ = "Development"
 
 logger = logging.getLogger(__name__)
 
