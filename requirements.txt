@@ -1,2 +1,9 @@
 # PEP8 code linting, which we run on all commits.
 flake8==3.2.1
+
+django-debug-toolbar==1.4
+djangorestframework==3.2.5
+coverage==4.2b1
+mock==2.0.0
+unittest-xml-reporting==2.1.0
+celery==3.1.23
