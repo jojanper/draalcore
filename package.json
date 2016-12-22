@@ -6,7 +6,7 @@
     "build": "python setup.py build",
     "lint": "gulp lint",
     "prepare": "pip install -r requirements.txt",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp unittest"
   },
   "keywords": [
     "python",
