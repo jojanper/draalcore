@@ -4,11 +4,14 @@
 
 # System imports
 import os
+import logging
 
 # Project imports
 from .utils.rest_api import FileUploadAPI
 from draalcore.test_utils.basetest import BaseTestUser
 
+
+logger = logging.getLogger(__name__)
 
 TEST_FILE_IMAGE = os.path.join(os.path.dirname(__file__), 'pic.jpg')
 TEST_FILE_CONTENT_HEADER = 'attachment; filename="pic.jpg"'
@@ -81,7 +84,10 @@ class FileUploadTestCase(FileUploadMixin, BaseTestUser):
         # GIVEN authenticated user
 
         # WHEN file is uploaded to valid API
-        response = self._upload_file(method='test_upload2')
+        kwargs = {
+            'HTTP_CONTENT_DISPOSITION': 'form-data; filename="{}"'.format('test_file')
+        }
+        response = self._upload_file(method='test_upload2', with_file=True, test_file='test1', **kwargs)
 
         # THEN it should succeed
         self.assertTrue(response.success)
@@ -92,7 +98,10 @@ class FileUploadTestCase(FileUploadMixin, BaseTestUser):
         # GIVEN authenticated user
 
         # WHEN uploading file via API that does not implement upload method
-        response = self._upload_file()
+        kwargs = {
+            'HTTP_CONTENT_DISPOSITION': 'form-data; filename="{}"'.format('test_file')
+        }
+        response = self._upload_file(**kwargs)
 
         # THEN it should fail
         self.assertTrue(response.error)

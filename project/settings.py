@@ -5,6 +5,7 @@
 import os
 import sys
 import json
+import logging.config
 
 __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2013-2016"
@@ -211,7 +212,7 @@ MIDDLEWARE_CLASSES = (
     'draalcore.middleware.version.ApplicationVersionMiddleware',
 )
 
-ROOT_URLCONF = 'test.urls'
+ROOT_URLCONF = 'project.urls'
 
 # List of callables that know how to import templates from various sources.
 LOCAL_TEMPLATE_LOADERS = [
@@ -274,12 +275,46 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
-    'nginx_memcache',
 
     'draalcore',
     'draalcore.models',
     'draalcore.test_models'
 )
+
+#
+# Logging configuration
+#
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose_full': {
+            'format': '[%(levelname)s %(asctime)s %(pathname)s %(funcName)s ' +
+                      '%(lineno)d: %(levelname)s/%(processName)s] %(message)s'
+        },
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(lineno)d: %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+        'formatter': 'verbose'
+    }
+}
+
+logging.config.dictConfig(LOGGING)
 
 from .ui_applications import *  # noqa
 from local_settings import *  # noqa

@@ -5,8 +5,10 @@
   "scripts": {
     "build": "python setup.py build",
     "lint": "gulp lint",
+    "setup": "node scripts/virtualenv",
     "prepare": "pip install -r requirements.txt",
-    "test": "gulp unittest"
+    "test": "gulp unittest",
+    "cibuild": "npm run lint && npm test"
   },
   "keywords": [
     "python",
@@ -17,6 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-shell": "^0.5.2"
+    "gulp-shell": "^0.5.2",
+    "shelljs": "^0.7.5"
   }
 }
