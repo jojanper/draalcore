@@ -35,7 +35,7 @@ var cmds = [
     'git add package.json',
     'git add draalcore/__init__.py',
     'git commit -m "Release ' + options.version + '"',
-    'git tag -a ' + options.version,
+    'git tag -a ' + options.version + ' -m "Release ' + options.version + '"',
     'git push origin master'
 ];
 
