@@ -1,6 +1,6 @@
 {
   "name": "draalcore",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Draal core for Python",
   "scripts": {
     "build": "python setup.py build",
