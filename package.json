@@ -8,7 +8,8 @@
     "setup": "node scripts/virtualenv",
     "prepare": "pip install -r requirements.txt",
     "test": "gulp unittest",
-    "cibuild": "npm run lint && npm test"
+    "cibuild": "npm run lint && npm test",
+    "release": "node scripts/release"
   },
   "keywords": [
     "python",
@@ -20,6 +21,8 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-shell": "^0.5.2",
-    "shelljs": "^0.7.5"
+    "shelljs": "^0.7.5",
+    "minimist": "^1.2.0",
+    "log-symbols": "^1.0.2"
   }
 }

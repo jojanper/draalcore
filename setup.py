@@ -2,8 +2,14 @@
 # -*- coding: utf-8 -*-
 """Library setup, inspired by https://github.com/pypa/sampleproject"""
 
+import json
 from setuptools import setup, find_packages
 
+
+EXCLUDE = ['*test*', 'setup.py', 'node_modules', 'build', 'virtualenv', 'project']
+
+with open('package.json') as json_data:
+    APP_VERSION = json.load(json_data)['version']
 
 setup(
     name='draalcore',
@@ -11,7 +17,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.1',
+    version=APP_VERSION,
 
     description='Draal core library for Python',
     long_description='Draal core library for Python',
@@ -55,7 +61,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(exclude=['*test*', 'setup.py', 'node_modules', 'build']),
+    packages=find_packages(exclude=EXCLUDE),
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
