@@ -2,7 +2,7 @@ language: python
 python:
     - 2.7
 install:
-    - nvm install 0.32.1
+    - nvm install 0.10
     - npm install
     - npm run prepre
 script:
