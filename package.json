@@ -9,7 +9,8 @@
     "prepare": "pip install -r requirements.txt",
     "test": "gulp unittest",
     "cibuild": "npm run lint && npm test",
-    "release": "node scripts/release"
+    "release": "node scripts/release",
+    "push-master": "git push origin master"
   },
   "keywords": [
     "python",
