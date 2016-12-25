@@ -10,7 +10,7 @@
     "test": "gulp unittest",
     "cibuild": "npm run lint && npm test",
     "release": "node scripts/release",
-    "push-master": "git push origin master"
+    "push-master": "git remote | xargs -L1 git push --all"
   },
   "keywords": [
     "python",
