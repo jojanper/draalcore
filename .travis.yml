@@ -1,0 +1,9 @@
+language: python
+python:
+    - 2.7
+install:
+    - nvm install 0.32.1
+    - npm install
+    - npm run prepre
+script:
+    - npm run cibuild

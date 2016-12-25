@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jojanper/draalcore.svg?branch=master)](https://travis-ci.org/jojanper/draalcore)
+
 # draalcore
 > Utility library (Django based) for backend application development.
 
