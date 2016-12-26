@@ -7,8 +7,8 @@ from mock import MagicMock
 
 # Project imports
 from ..models import TestModel
-from .utils.rest_api import HttpAPI
 from .utils.mixins import TestModelMixin
+from draalcore.test_utils.rest_api import HttpAPI
 from draalcore.rest.request_data import RequestData
 from draalcore.rest.response_data import ResponseData
 from draalcore.test_utils.basetest import BaseTestUser

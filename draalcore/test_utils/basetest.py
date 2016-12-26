@@ -8,7 +8,7 @@ import sys
 from django.test import TestCase
 from django.contrib.auth.models import User, Permission
 
-from draalcore.test_models.tests.utils.rest_api import GenericAPI
+from draalcore.test_utils.rest_api import GenericAPI
 
 
 def create_user(username, password, email):

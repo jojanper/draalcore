@@ -6,7 +6,7 @@ import json
 from setuptools import setup, find_packages
 
 
-EXCLUDE = ['*test*', 'setup.py', 'node_modules', 'build', 'virtualenv', 'project']
+EXCLUDE = ['*tests*', '*test_models*', 'setup.py', 'node_modules', 'build', 'virtualenv', 'project']
 
 with open('package.json') as json_data:
     APP_VERSION = json.load(json_data)['version']

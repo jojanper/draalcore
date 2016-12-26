@@ -7,7 +7,7 @@ import os
 import logging
 
 # Project imports
-from .utils.rest_api import FileUploadAPI
+from draalcore.test_utils.rest_api import FileUploadAPI
 from draalcore.test_utils.basetest import BaseTestUser
 
 
