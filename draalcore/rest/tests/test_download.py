@@ -5,7 +5,7 @@ from django.conf import settings
 
 from ..file_download import FileDownloader
 from draalcore.test_utils.basetest import BaseTest
-from draalcore.test_models.tests.test_upload import TEST_FILE_IMAGE
+from draalcore.test_utils.upload import TEST_FILE_IMAGE
 
 
 class FileDownloaderTestCase(BaseTest):

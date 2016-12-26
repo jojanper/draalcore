@@ -18,7 +18,7 @@ except ImportError:
 from ..file_upload import FileLoader
 from draalcore.exceptions import AppException
 from draalcore.test_utils.basetest import BaseTest
-from draalcore.test_models.tests.test_upload import TEST_FILE_IMAGE
+from draalcore.test_utils.upload import TEST_FILE_IMAGE
 
 
 file_identifier = 'file'
