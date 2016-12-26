@@ -63,6 +63,14 @@ setup(
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=EXCLUDE),
 
+    # If there are data files included in your packages that need to be
+    # installed, specify them here.  If using Python 2.6 or less, then these
+    # have to be included in MANIFEST.in as well.
+    #include_package_data=True,
+    package_data={
+        'draalcore.test_utils': ['audio.mp3', 'pic.gif', 'pic.jpg', 'test.invalid', 'video.mp4', 'test.txt'],
+    },
+
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
