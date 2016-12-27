@@ -19,5 +19,5 @@ commands = [
 ];
 
 shelljs.exec(commands.join(' && '), function(code, stdout, stderr) {
-    shelljs.exit(0);
+    shelljs.exit(code);
 });

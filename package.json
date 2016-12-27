@@ -14,10 +14,10 @@
   ],
   "scripts": {
     "build": "python setup.py build",
-    "lint": "gulp lint",
+    "lint": "flake8 --config=flake8 --verbose --exclude=virtualenv .",
     "setup": "node scripts/virtualenv",
     "prepare": "pip install -r requirements.txt",
-    "test": "gulp unittest",
+    "test": "node scripts/unittest",
     "cibuild": "npm run lint && npm test",
     "release": "node scripts/release",
     "push-master": "for r in $(git remote); do git push $r master; done"
@@ -30,8 +30,6 @@
   "author": "Juha Ojanpera juha.ojanpera@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-shell": "^0.5.2",
     "shelljs": "^0.7.5",
     "minimist": "^1.2.0",
     "log-symbols": "^1.0.2"
