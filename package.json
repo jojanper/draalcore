@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "build": "python setup.py build",
-    "lint": "flake8 --config=flake8 --verbose --exclude=virtualenv .",
+    "lint": "flake8 --config=flake8 --verbose --exclude=virtualenv,**/migrations/* .",
     "setup": "node scripts/virtualenv",
     "prepare": "pip install -r requirements.txt",
     "test": "node scripts/unittest",

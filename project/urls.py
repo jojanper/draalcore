@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.shortcuts import render
 from django.conf.urls import include, url
+from django.contrib.auth import views as auth_views
 
 from draalcore.views.baseviews import BaseView
 
@@ -17,15 +18,18 @@ __status__ = "Development"
 admin.autodiscover()
 
 
-class SettingsView(BaseView):
+class DummyView(BaseView):
     def get(self, request, *args, **kwargs):
         return render(request, '')
 
 
 urlpatterns = [
+    url(r'^$', DummyView.as_view(), name='main-view'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^apiv2/', include('draalcore.rest.urls')),
-    url(r'^settings$', SettingsView.as_view(), name='settings-view'),
+    url(r'^apiv2/', include('draalcore.auth.urls')),
+    url(r'^login/$', auth_views.login, {'template_name': ''}, name='auth-login'),
+    url(r'^settings$', DummyView.as_view(), name='settings-view'),
 ]
 
 # ReST APIs for testing

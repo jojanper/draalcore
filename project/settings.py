@@ -256,6 +256,10 @@ TEMPLATES = [
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'draalcore.auth.backend.GoogleOAuth2Backend',
+    'draalcore.auth.backend.TwitterOAuthBackend',
+    'draalcore.auth.backend.FacebookOAuthBackend',
+    'draalcore.auth.backend.OneDriveOAuth2Backend',
 )
 
 #
@@ -276,7 +280,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
 
-    'draalcore',
+    'draalcore.auth',
     'draalcore.models',
     'draalcore.test_models'
 )
@@ -316,5 +320,6 @@ LOGGING = {
 
 logging.config.dictConfig(LOGGING)
 
+from .developer_keys import *  # noqa
 from .ui_applications import *  # noqa
 from local_settings import *  # noqa
