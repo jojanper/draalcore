@@ -2,7 +2,6 @@
 flake8==3.2.1
 
 django==1.9.12
-django-debug-toolbar==1.4
 djangorestframework==3.5.3
 six==1.10.0
 celery==3.1.23
@@ -15,3 +14,4 @@ onedrivesdk==1.1.1
 coverage==4.2b1
 mock==2.0.0
 unittest-xml-reporting==2.1.0
+django-debug-toolbar==1.4

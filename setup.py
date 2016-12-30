@@ -11,6 +11,18 @@ EXCLUDE = ['*tests*', '*test_models*', 'setup.py', 'node_modules', 'build', 'vir
 with open('package.json') as json_data:
     APP_VERSION = json.load(json_data)['version']
 
+install_requires = [
+    'django>=1.9,<1.10',
+    'djangorestframework==3.5.3',
+    'six>=1.10.1,<2dev',
+    'celery>=3.1.23,<4dev',
+    'httplib2>=0.9.2,<1dev',
+    'google-api-python-client==1.5.5',
+    'oauth2',
+    'requests-oauthlib==0.7.0',
+    'onedrivesdk==1.1.1',
+]
+
 setup(
     name='draalcore',
 
@@ -74,5 +86,5 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=[]
+    install_requires=install_requires
 )
