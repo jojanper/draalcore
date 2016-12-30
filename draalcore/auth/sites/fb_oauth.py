@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Facebook OAuth interface."""
+
+# System imports
+import json
+import logging
+import urllib
+import urlparse
+import oauth2 as oauth
+from django.conf import settings
+from django.http import HttpResponseRedirect
+
+# Project imports
+from .base_auth import Base3rdPartyAuth
+
+
+logger = logging.getLogger(__name__)
+
+
+FACEBOOK_REQUEST_TOKEN_URL = 'https://www.facebook.com/dialog/oauth'
+FACEBOOK_ACCESS_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'
+FACEBOOK_CHECK_AUTH = 'https://graph.facebook.com/me'
+
+
+consumer = oauth.Consumer(key=settings.FACEBOOK_APP_ID, secret=settings.FACEBOOK_APP_SECRET)
+
+
+class FacebookOAuth(Base3rdPartyAuth):
+    PROVIDER = 'facebook'
+
+    def get_authorize_url(self, request):
+        """Request and prepare URL for login using Facebook account."""
+        base_url = '{}?client_id={}&redirect_uri={}&scope={}'
+        return base_url.format(FACEBOOK_REQUEST_TOKEN_URL, settings.FACEBOOK_APP_ID,
+                               urllib.quote_plus(self.get_callback_url()), 'email')
+
+    def authorize(self, request):
+
+        base_url = '{}?client_id={}&redirect_uri={}&client_secret={}&code={}'
+        request_url = base_url.format(FACEBOOK_ACCESS_TOKEN_URL, settings.FACEBOOK_APP_ID,
+                                      self.get_callback_url(), settings.FACEBOOK_APP_SECRET,
+                                      request.GET.get('code'))
+
+        # Get the access token from Facebook
+        client = oauth.Client(consumer)
+        response, content = client.request(request_url, 'GET')
+        if response['status'] == '200':
+
+            # Get profile info from Facebook
+            base_url = '{}?access_token={}&fields=id,first_name,last_name,email'
+            access_token = dict(urlparse.parse_qsl(content))['access_token']
+            request_url = base_url.format(FACEBOOK_CHECK_AUTH, access_token)
+            response, content = client.request(request_url, 'GET')
+            if response['status'] == '200':
+                user_data = json.loads(content)
+
+                # Authenticate user
+                logger.debug(user_data)
+                kwargs = {'facebook_response': user_data}
+                self.authenticate(request, **kwargs)
+
+                return HttpResponseRedirect('/')
+
+        return HttpResponseRedirect(self.get_login_page())
