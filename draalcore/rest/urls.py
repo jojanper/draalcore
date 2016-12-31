@@ -15,7 +15,7 @@ __status__ = "Development"
 
 
 urlpatterns = [
-     # Access to system models and data
+    # Access to system models and data
     url(r'^', include('draalcore.rest.rest_urls')),
 
     # Token auth API
