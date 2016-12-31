@@ -15,12 +15,12 @@ __status__ = "Development"
 
 
 urlpatterns = [
+     # Access to system models and data
+    url(r'^', include('draalcore.rest.rest_urls')),
+
     # Token auth API
     url(r'^token-auth', obtain_auth_token),
 
     # Enable login via Browsable API
     url(r'^browsable-auth/', include(rest_urls, namespace='rest_framework')),
-
-    # Access to system models and data
-    url(r'^system/', include('draalcore.rest.rest_urls')),
 ]

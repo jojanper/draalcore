@@ -3,6 +3,7 @@
 """ReST URLs for accessing system models and data"""
 
 # Project imports
+from django.conf import settings
 from django.conf.urls import url
 
 # Project imports
@@ -20,41 +21,45 @@ __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
 
+prefix = getattr(settings, 'DRAALCORE_REST_SYSTEM_BASE_PREFIX', 'system')
+url_prefix = '{}/(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)'.format(prefix)
+
+
 urlpatterns = [
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/(?P<id>\d+)/actions/(?P<action>[A-Za-z0-9\-]+)$',
+    url(r'{}/(?P<id>\d+)/actions/(?P<action>[A-Za-z0-9\-]+)$'.format(url_prefix),
         ActionsHandler.as_view(),
         name='rest-api-model-actions'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/actions/(?P<action>[A-Za-z0-9\-]+)$',
+    url(r'{}/actions/(?P<action>[A-Za-z0-9\-]+)$'.format(url_prefix),
         ActionsHandler.as_view(),
         name='rest-api-actions'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/(?P<id>\d+)/actions$',
+    url(r'{}/(?P<id>\d+)/actions$'.format(url_prefix),
         ActionListingsHandler.as_view(),
         name='rest-api-item-id-actions-listing'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/(?P<id>\d+)/history$',
+    url(r'{}/(?P<id>\d+)/history$'.format(url_prefix),
         BaseSerializerDataItemHistoryHandler.as_view(),
         name='rest-api-item-id-history'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/(?P<id>\d+)$',
+    url(r'{}/(?P<id>\d+)$'.format(url_prefix),
         BaseSerializerDataItemHandler.as_view(),
         name='rest-api-item-id'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/actions$',
+    url(r'{}/actions$'.format(url_prefix),
         ActionListingsHandler.as_view(),
         name='rest-api-model-actions-listing'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)/meta$',
+    url(r'{}/meta$'.format(url_prefix),
         BaseSerializerModelMetaHandler.as_view(),
         name='rest-api-model-meta'),
 
-    url(r'(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)$',
+    url(r'{}$'.format(url_prefix),
         BaseSerializerHandler.as_view(),
         name='rest-api'),
 
-    url(r'$',
+    url(r'{}$'.format(prefix),
         ModelsListingHandler.as_view(),
         name='rest-api-models'),
 ]
