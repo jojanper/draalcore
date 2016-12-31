@@ -291,7 +291,7 @@ class BaseModelMetaTestCase(TestModelMixin, BaseTestUser):
             "required": False,
             "editable": True,
             "selector": {
-                "url": "/apiv2/generic/test_models/testmodel",
+                "url": "/api/system/test_models/testmodel",
                 "displayKey": None
             }
         })
@@ -306,7 +306,7 @@ class BaseModelMetaTestCase(TestModelMixin, BaseTestUser):
             "required": False,
             "editable": True,
             "selector": {
-                "url": "/apiv2/generic/test_models/testmodel",
+                "url": "/api/system/test_models/testmodel",
                 "displayKey": None
             }
         })
@@ -321,7 +321,7 @@ class BaseModelMetaTestCase(TestModelMixin, BaseTestUser):
             "required": True,
             "editable": True,
             "selector": {
-                "url": "/apiv2/generic/test_models/testmodel",
+                "url": "/api/system/test_models/testmodel",
                 "displayKey": None
             }
         })
