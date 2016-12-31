@@ -4,9 +4,9 @@
  * @module scripts/release.
  */
 
-shelljs = require('shelljs');
-var options = require('minimist')(process.argv.slice(1));
-var logger = require('log-symbols');
+const shelljs = require('shelljs');
+const options = require('minimist')(process.argv.slice(1));
+const logger = require('log-symbols');
 
 
 if (!options.version) {

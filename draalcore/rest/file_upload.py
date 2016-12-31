@@ -5,7 +5,6 @@
 # System imports
 import os
 import logging
-from rest_framework.parsers import FileUploadParser
 from django.core.files.uploadedfile import UploadedFile
 
 # Project imports
@@ -93,8 +92,6 @@ class FileUploadHandler(PostMixin, RestAPIBasicAuthView):
 
     Implementing class must have method defined by UPLOAD_METHOD.
     """
-
-    parser_classes = (FileUploadParser, )
     UPLOAD_METHOD = '_upload'
 
     def _post(self, request_obj):

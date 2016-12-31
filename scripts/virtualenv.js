@@ -4,8 +4,8 @@
  * @module scripts/virtualenv
  */
 
-shelljs = require('shelljs');
-format = require('util').format;
+const shelljs = require('shelljs');
+const format = require('util').format;
 
 const folder = 'draalcore';
 

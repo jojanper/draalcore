@@ -4,7 +4,7 @@
  * @module scripts/unittest
  */
 
-shelljs = require('shelljs');
+const shelljs = require('shelljs');
 
 commands = [
     'coverage run --source=. manage.py test --verbosity=2 --settings=project.test_settings',
