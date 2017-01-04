@@ -175,9 +175,6 @@ class ModelBaseManager(BaseManager):
 class BaseModel(models.Model):
     """Base model for applications to use. Includes only utility methods."""
 
-    # DO NOT CHANGE THIS VALUE! Used to identify legacy vs new code
-    APPLICATION_MODEL = True
-
     # If set to False, model is private, that is, not accessible via ReST API
     EXTERNAL_API = True
 

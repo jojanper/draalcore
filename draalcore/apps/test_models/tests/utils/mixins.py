@@ -3,7 +3,7 @@
 """Mixins for testing."""
 
 # Project imports
-from draalcore.test_models.models import TestModel, TestModel2, TestModel3, TestModel4, TestModel5
+from draalcore.apps.test_models.models import TestModel, TestModel2, TestModel3, TestModel4, TestModel5
 
 
 class TestModelMixin(object):

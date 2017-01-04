@@ -32,7 +32,7 @@ def model_load_error_message(msg_prefix, obj):
 
 
 class ModelContainer(object):
-    """Interface for accessing application models."""
+    """Interface for accessing application models based on application and model name."""
 
     def __init__(self, app_label, model_name):
         self._app_label = app_label
@@ -49,7 +49,7 @@ class ModelContainer(object):
     @property
     def model_cls(self):
         """
-        Return model class that corresponds to object input.
+        Return model class that corresponds to current object instance.
 
         Raises:
         -------
@@ -62,7 +62,7 @@ class ModelContainer(object):
             if self._app_label == model._meta.app_label and self._model_name == model._meta.db_table:
 
                 # If model's EXTERNAL_API attribute is not True, then access to model is denied
-                if not (hasattr(model, 'EXTERNAL_API') and getattr(model, 'EXTERNAL_API')):
+                if not getattr(model, 'EXTERNAL_API', False):
                     raise ModelAccessDeniedError(model_load_error_message('API call {} not allowed', self))
 
                 return model
@@ -71,7 +71,7 @@ class ModelContainer(object):
 
 
 class ModelsCollection(object):
-    """Interface for accessing application models."""
+    """Interface for accessing public application models."""
 
     @classmethod
     def serialize(cls):
@@ -79,9 +79,19 @@ class ModelsCollection(object):
 
     def __iter__(self):
         """Model class meta iterator."""
-        return iter([model._meta for model in apps.get_models()
-                     if hasattr(model, 'APPLICATION_MODEL') and getattr(model, 'APPLICATION_MODEL') and
-                     hasattr(model, 'EXTERNAL_API') and getattr(model, 'EXTERNAL_API')])
+        return iter([model._meta for model in apps.get_models() if getattr(model, 'EXTERNAL_API', False)])
+
+
+class AppsCollection(object):
+    """Interface for accessing public applications."""
+
+    @classmethod
+    def serialize(cls):
+        return [dict(app_label=app.display_name, model=None) for app in AppsCollection()]
+
+    def __iter__(self):
+        """Applications iterator."""
+        return iter([app for app in apps.get_app_configs() if getattr(app, 'public_app', False)])
 
 
 class SerializerFinder(object):

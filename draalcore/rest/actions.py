@@ -17,7 +17,7 @@ from .handlers import PostMixin, GetMixin, RestAPIBasicAuthView
 from .request_data import RequestData
 from .response_data import ResponseData
 from .serializer_object import SerializerModelDataObject
-from draalcore.rest.model import ModelContainer, locate_base_module, ModelsCollection
+from draalcore.rest.model import ModelContainer, locate_base_module, ModelsCollection, AppsCollection
 from draalcore.exceptions import DataParsingError
 from draalcore.middleware.current_user import get_current_request
 
@@ -462,6 +462,7 @@ class ModelsListingHandler(GetMixin, RestAPIBasicAuthView):
         args = request_obj.args
         kwargs = request_obj.kwargs
 
+        # Publicly available models (that are associated to some applications)
         data = ModelsCollection.serialize()
         for item in data:
             kwargs['app'] = item['app_label']
@@ -469,11 +470,17 @@ class ModelsListingHandler(GetMixin, RestAPIBasicAuthView):
             obj2 = RequestData(request_obj.request, *args, **kwargs)
             item['actions'] = ActionsSerializer(obj2).serialize()
 
-        # These are UI only application views but enabled from backend
+        # Publicly available apps that have app level actions
+        apps = AppsCollection.serialize()
+        for app in apps:
+            app.update({'actions': []})
+            data.append(app)
+
+        # UI only application views but enabled from backend
         if hasattr(settings, 'UI_APPLICATION_MODELS'):
             for item in settings.UI_APPLICATION_MODELS:
                 for app, _models in item.iteritems():
                     for model in _models:
-                        data.append({'app_label': app, 'model': model['name'], 'actions': {}})
+                        data.append({'app_label': app, 'model': model['name'], 'actions': []})
 
         return ResponseData(data)
