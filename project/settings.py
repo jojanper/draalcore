@@ -282,8 +282,8 @@ INSTALLED_APPS = (
 
     'draalcore.auth',
     'draalcore.models',
-    'draalcore.apps.test_models',
-    'draalcore.apps.admin'
+    'draalcore.test_apps.test_models',
+    'draalcore.test_apps.admin'
 )
 
 #

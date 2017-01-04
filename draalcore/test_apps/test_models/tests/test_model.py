@@ -13,7 +13,7 @@ from draalcore.rest.model import ModelContainer
 from draalcore.exceptions import ModelNotFoundError, ModelAccessDeniedError
 from draalcore.test_utils.basetest import BaseTest, BaseTestUser
 from draalcore.models.fields import AppModelCharField
-from draalcore.apps.test_models.models import TestModelBaseModel
+from draalcore.test_apps.test_models.models import TestModelBaseModel
 
 
 logger = logging.getLogger(__name__)
