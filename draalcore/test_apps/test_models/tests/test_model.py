@@ -238,13 +238,13 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
         # THEN it should succeed
         self.assertTrue(response.success)
 
-    def test_api_models(self):
+    def test_root_api(self):
         """Available applications and models for ReST API."""
 
         # GIVEN API
 
-        # WHEN fetching available models
-        response = self.api.api_models()
+        # WHEN fetching available applications and models
+        response = self.api.root_api()
 
         # THEN it should succeed
         self.assertTrue(response.success)

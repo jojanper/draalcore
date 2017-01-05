@@ -22,30 +22,31 @@ __status__ = "Development"
 
 
 prefix = getattr(settings, 'DRAALCORE_REST_SYSTEM_BASE_PREFIX', 'system')
-model_prefix = '{}/(?P<app>[A-Za-z0-9\-_]+)/(?P<model>[A-Za-z0-9]+)'.format(prefix)
+app_prefix = '{}/(?P<app>[A-Za-z0-9\-_]+)'.format(prefix)
+model_prefix = '{}/(?P<model>[A-Za-z0-9]+)'.format(app_prefix)
 
 
 urlpatterns = [
 
     url(r'{}/(?P<id>\d+)/actions/(?P<action>[A-Za-z0-9\-]+)$'.format(model_prefix),
         ActionsHandler.as_view(),
-        name='rest-api-model-actions'),
+        name='rest-api-model-id-action'),
 
     url(r'{}/actions/(?P<action>[A-Za-z0-9\-]+)$'.format(model_prefix),
         ActionsHandler.as_view(),
-        name='rest-api-actions'),
+        name='rest-api-model-action'),
 
     url(r'{}/(?P<id>\d+)/actions$'.format(model_prefix),
         ActionListingsHandler.as_view(),
-        name='rest-api-item-id-actions-listing'),
+        name='rest-api-model-id-actions-listing'),
 
     url(r'{}/(?P<id>\d+)/history$'.format(model_prefix),
         BaseSerializerDataItemHistoryHandler.as_view(),
-        name='rest-api-item-id-history'),
+        name='rest-api-model-id-history'),
 
     url(r'{}/(?P<id>\d+)$'.format(model_prefix),
         BaseSerializerDataItemHandler.as_view(),
-        name='rest-api-item-id'),
+        name='rest-api-model-id'),
 
     url(r'{}/actions$'.format(model_prefix),
         ActionListingsHandler.as_view(),
@@ -55,11 +56,15 @@ urlpatterns = [
         BaseSerializerModelMetaHandler.as_view(),
         name='rest-api-model-meta'),
 
+    url(r'{}/actions$'.format(app_prefix),
+        ActionListingsHandler.as_view(),
+        name='rest-api-app-actions'),
+
     url(r'{}$'.format(model_prefix),
         BaseSerializerHandler.as_view(),
-        name='rest-api'),
+        name='rest-api-model'),
 
     url(r'{}$'.format(prefix),
         ModelsListingHandler.as_view(),
-        name='rest-api-models'),
+        name='rest-api'),
 ]

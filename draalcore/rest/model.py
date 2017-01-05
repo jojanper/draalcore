@@ -25,7 +25,7 @@ def locate_base_module(model_cls, postfix='serializers'):
 
 
 def model_load_error_message(msg_prefix, obj):
-    return msg_prefix.format(reverse('rest-api', kwargs={
+    return msg_prefix.format(reverse('rest-api-model', kwargs={
         'app': obj.app_label,
         'model': obj.model_name
     }))

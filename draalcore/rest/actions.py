@@ -356,7 +356,29 @@ class ActionsSerializer(object):
 
     def serialize(self):
         """
-        Serialize actions.
+        Interface for serializing application and/or model related actions.
+
+        Returns
+        -------
+        dict
+           Action details.
+        """
+        return self._serialize_model_actions() if 'model' in self.request_obj.kwargs else self._serialize_app_actions()
+
+    def _serialize_app_actions(self):
+        """
+        Serialize actions that are application related (not tight to any specific model).
+
+        Returns
+        -------
+        dict
+           Action details.
+        """
+        return {}
+
+    def _serialize_model_actions(self):
+        """
+        Serialize actions that are related to a model.
 
         Returns
         -------
@@ -364,7 +386,7 @@ class ActionsSerializer(object):
            Action details.
         """
         resolver = {
-            'name': 'rest-api-actions',
+            'name': 'rest-api-model-action',
             'kwargs': {
                 'app': self.request_obj.kwargs['app'],
                 'model': self.request_obj.kwargs['model']
@@ -373,7 +395,7 @@ class ActionsSerializer(object):
 
         get_base_actions = []
         if 'id' in self.request_obj.kwargs:
-            resolver['name'] = 'rest-api-model-actions'
+            resolver['name'] = 'rest-api-model-id-action'
             resolver['kwargs'].update({'id': self.request_obj.kwargs['id']})
 
             # First item needs to be None as the base class for actions search is based on the
@@ -396,7 +418,7 @@ class ActionsSerializer(object):
         return actions
 
     @classmethod
-    def serialize_model_actions(cls, model_cls, model_id):
+    def serialize_model_id_actions(cls, model_cls, model_id):
         """
         Class method to serialize actions for specified model and model ID. Only those actions are serialized
         that require HTTP POST method with no input data and HTTP GET method that have LINK_ACTION set to True.
@@ -422,7 +444,7 @@ class ActionsSerializer(object):
                 'model': model_cls._meta.db_table,
                 'id': model_id
             },
-            'name': 'rest-api-model-actions'
+            'name': 'rest-api-model-id-action'
         }
         request_obj = RequestData(get_current_request(), **resolver['kwargs'])
 

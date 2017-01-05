@@ -242,7 +242,7 @@ class BaseModel(models.Model):
             'app': cls._meta.app_label,
             'model': cls._meta.db_table
         }
-        return reverse('rest-api', kwargs=kwargs)
+        return reverse('rest-api-model', kwargs=kwargs)
 
     @classmethod
     def meta_attributes(cls):

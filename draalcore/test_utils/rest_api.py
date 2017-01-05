@@ -59,19 +59,19 @@ class GenericAPI(ClientConnectionUtility):
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def GET(self, app, model, params={}):
-        url = reverse('rest-api', kwargs={'app': app, 'model': model})
+        url = reverse('rest-api-model', kwargs={'app': app, 'model': model})
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def create(self, app, model, data):
-        url = reverse('rest-api-actions', kwargs={'app': app, 'model': model, 'action': 'create'})
+        url = reverse('rest-api-model-action', kwargs={'app': app, 'model': model, 'action': 'create'})
         return getattr(self, 'post')(url, data)
 
     def model_action(self, app, model, model_id, action, data=None, method='post'):
-        url = reverse('rest-api-model-actions', kwargs={'app': app, 'model': model, 'id': model_id, 'action': action})
+        url = reverse('rest-api-model-id-action', kwargs={'app': app, 'model': model, 'id': model_id, 'action': action})
         return getattr(self, 'post')(url, data) if method == 'post' else getattr(self, 'get')(url)
 
     def action(self, app, model, action, data=None, method='post'):
-        url = reverse('rest-api-actions', kwargs={'app': app, 'model': model, 'action': action})
+        url = reverse('rest-api-model-action', kwargs={'app': app, 'model': model, 'action': action})
         return getattr(self, 'post')(url, data) if method == 'post' else getattr(self, 'get')(url)
 
     def model_actions(self, app, model, params=None):
@@ -79,23 +79,23 @@ class GenericAPI(ClientConnectionUtility):
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def data_id_actions_listing(self, app, model, model_id, params=None):
-        url = reverse('rest-api-item-id-actions-listing', kwargs={'app': app, 'model': model, 'id': model_id})
+        url = reverse('rest-api-model-id-actions-listing', kwargs={'app': app, 'model': model, 'id': model_id})
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def dataid(self, app, model, model_id, params=None):
-        url = reverse('rest-api-item-id', kwargs={'app': app, 'model': model, 'id': model_id})
+        url = reverse('rest-api-model-id', kwargs={'app': app, 'model': model, 'id': model_id})
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def history(self, app, model, model_id, params=None):
-        url = reverse('rest-api-item-id-history', kwargs={'app': app, 'model': model, 'id': model_id})
+        url = reverse('rest-api-model-id-history', kwargs={'app': app, 'model': model, 'id': model_id})
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def meta(self, app, model,  params=None):
         url = reverse('rest-api-model-meta', kwargs={'app': app, 'model': model})
         return getattr(self, 'get')(url + self._dict2url(params))
 
-    def api_models(self):
-        url = reverse('rest-api-models')
+    def root_api(self):
+        url = reverse('rest-api')
         return getattr(self, 'get')(url)
 
     def auth_request(self, name, params=None):
