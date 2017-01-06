@@ -18,6 +18,11 @@ class FactoryException(AppException):
     pass
 
 
+class AppNotFoundError(RestApiException):
+    """Invalid application for specified for ReST API call."""
+    pass
+
+
 class ModelNotFoundError(RestApiException):
     """Invalid model for specified for ReST API call."""
     pass

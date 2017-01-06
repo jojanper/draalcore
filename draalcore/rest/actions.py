@@ -152,6 +152,16 @@ class AbstractModelItemGetAction(EditAction):
         """Must be defined in the implementing class"""
 
 
+def get_action_response_data(obj, url_name, resolve_kwargs, method=None):
+    """Return serialized action URL data"""
+    return {
+        'url': '{}{}'.format(settings.SITE_URL, reverse(url_name, kwargs=resolve_kwargs)),
+        'display_name': getattr(obj, 'DISPLAY_NAME', obj.ACTION),
+        'method': method or obj.ALLOWED_METHODS[0],
+        'direct': obj.LINK_ACTION
+    }
+
+
 class ActionMapper(object):
     """Utility wrapper class for model actions."""
 
@@ -172,7 +182,7 @@ class ActionMapper(object):
            HTTP method.
         resolver
            URL resolver, should contain 'name' and 'kwargs' keys for URL reverse method.
-        include_link
+        include_link_actions
            If True, only those model actions are serialized that have LINK_ACTION attribute set to value True.
            Default value is False.
 
@@ -184,26 +194,17 @@ class ActionMapper(object):
 
         classes = cls.action_classes(request_obj, model_cls, cls_options, method)
 
-        http_host = request_obj.request.META.get('HTTP_HOST', '')
-        http_prefix = 'https' if request_obj.request.is_secure() else 'http'
-        http_prefix = '{}://{}'.format(http_prefix, http_host) if http_host else ''
-
         # Is inclusion of all actions required in URL parameters?
         all_actions = request_obj.has_url_param('actions', 'all')
 
-        # Include actions that do not require
+        # Include actions that do not require input parameters
         if not all_actions and include_link_actions:
             classes = [item for item in classes if item.LINK_ACTION]
 
         data = {}
         for item in classes:
             resolver['kwargs']['action'] = item.ACTION
-            data[item.ACTION] = {
-                'url': '{}{}'.format(http_prefix, reverse(resolver['name'], kwargs=resolver['kwargs'])),
-                'display_name': item.DISPLAY_NAME if hasattr(item, 'DISPLAY_NAME') else item.ACTION,
-                'method': method,
-                'direct': item.LINK_ACTION
-            }
+            data[item.ACTION] = get_action_response_data(item, resolver['name'], resolver['kwargs'], method)
 
         return data
 
@@ -301,8 +302,8 @@ class ActionMapper(object):
         raise DataParsingError('Action {} not supported for method {}'.format(action, method))
 
 
-class ActionsMixin(GetMixin, PostMixin):
-    """Actions mixin handling HTTP GET and HTTP POST action queries."""
+class ModelActionMixin(GetMixin, PostMixin):
+    """Actions mixin handling HTTP GET and HTTP POST queries for model related actions."""
 
     def _get(self, request_obj):
         """Apply HTTP GET action to application model."""
@@ -336,6 +337,24 @@ class ActionsMixin(GetMixin, PostMixin):
             return ResponseData(data)
 
         msg = "{} action for '{}' is not supported via the API".format(action, request_obj.kwargs['model'])
+        return ResponseData(message=msg)
+
+
+class AppActionMixin(GetMixin, PostMixin):
+    """Actions mixin handling HTTP GET and HTTP POST queries for application related actions."""
+
+    def _get(self, request_obj):
+        """Apply HTTP GET action to application."""
+        return self._execute_action(request_obj, 'GET')
+
+    def _post(self, request_obj):
+        """Apply HTTP POST action to application."""
+        return self._execute_action(request_obj, 'POST')
+
+    def _execute_action(self, request_obj, method):
+        """Execute application level action."""
+        action = request_obj.kwargs['action']
+        msg = "{} action for '{}' application is not supported via the API".format(action, request_obj.kwargs['app'])
         return ResponseData(message=msg)
 
 
@@ -374,7 +393,16 @@ class ActionsSerializer(object):
         dict
            Action details.
         """
-        return {}
+        data = {}
+        app = AppsCollection().get_app(self.request_obj.kwargs['app'])
+        for item in app.actions:
+            resolve_kwargs = {
+                'app': app.display_name,
+                'action': item.ACTION
+            }
+            data[item.ACTION] = get_action_response_data(item, 'rest-api-app-action', resolve_kwargs)
+
+        return data
 
     def _serialize_model_actions(self):
         """
@@ -468,18 +496,23 @@ class ActionsListingMixin(GetMixin):
         return ResponseData(ActionsSerializer(request_obj).serialize())
 
 
-class ActionsHandler(ActionsMixin, RestAPIBasicAuthView):
-    """ReST API entry point for the application model actions"""
+class ModelActionHandler(ModelActionMixin, RestAPIBasicAuthView):
+    """ReST API entry point for executing application model action"""
     pass
 
 
-class ActionListingsHandler(ActionsListingMixin, RestAPIBasicAuthView):
-    """ReST API entry point for listing available actions for application model."""
+class AppActionHandler(AppActionMixin, RestAPIBasicAuthView):
+    """ReST API entry point for executing application level action"""
     pass
 
 
-class ModelsListingHandler(GetMixin, RestAPIBasicAuthView):
-    """Application models and associated actions that can be accessed via ReST API."""
+class ActionsListingHandler(ActionsListingMixin, RestAPIBasicAuthView):
+    """ReST API entry point for listing available actions for application and/or model."""
+    pass
+
+
+class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
+    """ReST API entry point for listing application models and associated actions that are accessible."""
     def _get(self, request_obj):
         args = request_obj.args
         kwargs = request_obj.kwargs

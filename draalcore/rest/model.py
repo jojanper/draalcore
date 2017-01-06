@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 
 # Project imports
 from draalcore.exceptions import (ModelNotFoundError, ModelAccessDeniedError, ModelSerializerNotDefinedError,
-                                  ModelSerializerNotFoundError)
+                                  ModelSerializerNotFoundError, AppNotFoundError)
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,12 @@ def model_load_error_message(msg_prefix, obj):
     return msg_prefix.format(reverse('rest-api-model', kwargs={
         'app': obj.app_label,
         'model': obj.model_name
+    }))
+
+
+def app_load_error_message(msg_prefix, app):
+    return msg_prefix.format(reverse('rest-api-app-actions-listing', kwargs={
+        'app': app
     }))
 
 
@@ -92,6 +98,14 @@ class AppsCollection(object):
     def __iter__(self):
         """Applications iterator."""
         return iter([app for app in apps.get_app_configs() if getattr(app, 'public_app', False)])
+
+    def get_app(self, app_name):
+        """Return application object that corresponds to specified name"""
+        for app in AppsCollection():
+            if app_name == app.display_name:
+                return app
+
+        raise AppNotFoundError(app_load_error_message('Invalid API call {}', app_name))
 
 
 class SerializerFinder(object):

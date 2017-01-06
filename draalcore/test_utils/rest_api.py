@@ -98,6 +98,14 @@ class GenericAPI(ClientConnectionUtility):
         url = reverse('rest-api')
         return getattr(self, 'get')(url)
 
+    def app_actions(self, app):
+        url = reverse('rest-api-app-actions-listing', kwargs={'app': app})
+        return getattr(self, 'get')(url)
+
+    def app_action(self, app, action, method='get', **kwargs):
+        url = reverse('rest-api-app-action', kwargs={'app': app, 'action': action})
+        return getattr(self, method.lower())(url, **kwargs)
+
     def auth_request(self, name, params=None):
         url = reverse('ext-auth-login', kwargs={'provider': name})
         return getattr(self, 'get')(url + self._dict2url(params))
