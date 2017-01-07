@@ -329,12 +329,11 @@ class ModelActionMixin(GetMixin, PostMixin):
             obj = action_obj.execute()
 
             # Serialize data as response
-            data = obj
             if obj and isinstance(obj, (models.Model, QuerySet)):
                 request_obj.set_queryset(obj)
-                data = ser_obj.serialize().data
+                obj = ser_obj.serialize().data
 
-            return ResponseData(data)
+            return ResponseData(obj)
 
         msg = "{} action for '{}' is not supported via the API".format(action, request_obj.kwargs['model'])
         return ResponseData(message=msg)
@@ -353,9 +352,30 @@ class AppActionMixin(GetMixin, PostMixin):
 
     def _execute_action(self, request_obj, method):
         """Execute application level action."""
-        action = request_obj.kwargs['action']
-        msg = "{} action for '{}' application is not supported via the API".format(action, request_obj.kwargs['app'])
-        return ResponseData(message=msg)
+
+        # Find application config object
+        app = AppsCollection().get_app(request_obj.kwargs['app'])
+
+        # Find the actual action object
+        action_obj = app.get_action_obj(request_obj, method)
+
+        # Execute
+        obj = action_obj.execute()
+
+        # Serialize returned data if its queryset or model item
+        if obj and isinstance(obj, (models.Model, QuerySet)):
+
+            # Queryset model
+            model_cls = obj.model
+
+            # Create serializer based on model
+            ser_obj = SerializerModelDataObject.create(request_obj, model_cls)
+            request_obj.set_queryset(obj)
+
+            # Serialize queryset data
+            obj = ser_obj.serialize().data
+
+        return ResponseData(obj)
 
 
 class ActionsSerializer(object):
@@ -391,18 +411,10 @@ class ActionsSerializer(object):
         Returns
         -------
         dict
-           Action details.
+           Keys describe the name of action and corresponding value the details of the action.
         """
-        data = {}
         app = AppsCollection().get_app(self.request_obj.kwargs['app'])
-        for item in app.actions:
-            resolve_kwargs = {
-                'app': app.display_name,
-                'action': item.ACTION
-            }
-            data[item.ACTION] = get_action_response_data(item, 'rest-api-app-action', resolve_kwargs)
-
-        return data
+        return app.serialize_actions(get_action_response_data)
 
     def _serialize_model_actions(self):
         """
@@ -526,9 +538,7 @@ class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
             item['actions'] = ActionsSerializer(obj2).serialize()
 
         # Publicly available apps that have app level actions
-        apps = AppsCollection.serialize()
-        for app in apps:
-            app.update({'actions': []})
+        for app in AppsCollection.serialize(get_action_response_data):
             data.append(app)
 
         # UI only application views but enabled from backend

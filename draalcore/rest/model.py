@@ -92,8 +92,9 @@ class AppsCollection(object):
     """Interface for accessing public applications."""
 
     @classmethod
-    def serialize(cls):
-        return [dict(app_label=app.display_name, model=None) for app in AppsCollection()]
+    def serialize(cls, actions_serializer_fn):
+        return [dict(app_label=app.display_name, model=None,
+            actions=app.serialize_actions(actions_serializer_fn)) for app in AppsCollection()]
 
     def __iter__(self):
         """Applications iterator."""

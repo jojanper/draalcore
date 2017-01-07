@@ -12,4 +12,4 @@ class CreateNewAction(CreateAction):
     MODEL = TestModel2
 
     def _execute(self):
-        return {'data': 'abcd'}
+        return self.MODEL.objects.all()

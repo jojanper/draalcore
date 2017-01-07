@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.apps import AppConfig
+from draalcore.app_config import BaseAppConfig
 
 
-class AdminConfig(AppConfig):
+class AdminConfig(BaseAppConfig):
     name = 'draalcore.test_apps.admin'
     label = 'draalcore.test_apps.admin'
-
-    public_app = True
     display_name = 'admin'
-    actions = []
 
     def ready(self):
         from .actions import CreateNewAction

@@ -262,7 +262,7 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
         data = [item for item in response.data if item['app_label'] == 'admin']
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['model'], None)
-        self.assertEqual(len(data[0]['actions']), 0)
+        self.assertEqual(len(data[0]['actions'].keys()), 1)
 
     def test_repr(self):
         """Test model objects must have printable representation"""
