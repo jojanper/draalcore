@@ -18,7 +18,6 @@ class BaseAppConfig(AppConfig):
     # List of public actions available for this application
     actions = []
 
-
     def serialize_actions(self, serializer_fn):
         """
         Serialize application level actions.
