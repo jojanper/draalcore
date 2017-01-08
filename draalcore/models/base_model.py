@@ -175,9 +175,6 @@ class ModelBaseManager(BaseManager):
 class BaseModel(models.Model):
     """Base model for applications to use. Includes only utility methods."""
 
-    # DO NOT CHANGE THIS VALUE! Used to identify legacy vs new code
-    APPLICATION_MODEL = True
-
     # If set to False, model is private, that is, not accessible via ReST API
     EXTERNAL_API = True
 
@@ -245,7 +242,7 @@ class BaseModel(models.Model):
             'app': cls._meta.app_label,
             'model': cls._meta.db_table
         }
-        return reverse('rest-api', kwargs=kwargs)
+        return reverse('rest-api-model', kwargs=kwargs)
 
     @classmethod
     def meta_attributes(cls):

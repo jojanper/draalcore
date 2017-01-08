@@ -44,7 +44,7 @@ class ActionsUrlSerializer(DynamicFieldsModelSerializer):
     actions = serializers.SerializerMethodField('field_actions')
 
     def field_actions(self, obj):
-        return ActionsSerializer.serialize_model_actions(self.Meta.model, obj.id)
+        return ActionsSerializer.serialize_model_id_actions(self.Meta.model, obj.id)
 
 
 def field_impl(field):

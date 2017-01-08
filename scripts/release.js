@@ -10,7 +10,7 @@ const logger = require('log-symbols');
 
 
 if (!options.version) {
-    console.log(logger.error, 'No --version=<version> argument defined!');
+    console.log(logger.error, 'No --version=<major.minor.patch> argument defined!');
     process.exit(1);
 }
 

@@ -13,7 +13,7 @@ from draalcore.rest.model import ModelContainer
 from draalcore.exceptions import ModelNotFoundError, ModelAccessDeniedError
 from draalcore.test_utils.basetest import BaseTest, BaseTestUser
 from draalcore.models.fields import AppModelCharField
-from draalcore.test_models.models import TestModelBaseModel
+from draalcore.test_apps.test_models.models import TestModelBaseModel
 
 
 logger = logging.getLogger(__name__)
@@ -238,13 +238,13 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
         # THEN it should succeed
         self.assertTrue(response.success)
 
-    def test_api_models(self):
-        """Available application models for ReST API."""
+    def test_root_api(self):
+        """Available applications and models for ReST API."""
 
         # GIVEN API
 
-        # WHEN fetching available models
-        response = self.api.api_models()
+        # WHEN fetching available applications and models
+        response = self.api.root_api()
 
         # THEN it should succeed
         self.assertTrue(response.success)
@@ -257,6 +257,12 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
 
         # AND it contains also UI application models
         self.assertTrue(any('test' in d['app_label'] for d in response.data))
+
+        # AND public applications are also available
+        data = [item for item in response.data if item['app_label'] == 'admin']
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['model'], None)
+        self.assertEqual(len(data[0]['actions'].keys()), 1)
 
     def test_repr(self):
         """Test model objects must have printable representation"""

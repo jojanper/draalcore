@@ -34,7 +34,7 @@ urlpatterns = [
 
 # ReST APIs for testing
 if settings.TEST_URLS:
-    urlpatterns += [url(r'^test-api/', include('draalcore.test_models.urls'))]
+    urlpatterns += [url(r'^test-api/', include('draalcore.test_apps.test_models.urls'))]
 
 if settings.ENABLE_DEBUG_TOOLBAR:
     import debug_toolbar
