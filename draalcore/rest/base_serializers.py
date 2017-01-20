@@ -6,6 +6,7 @@
 import json
 import logging
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from django.contrib.admin.models import LogEntry
 
 # Project imports
@@ -130,3 +131,17 @@ class HistorySerializer(ModelSerializer):
             return json.loads(obj.change_message)
         except ValueError:
             return obj.change_message
+
+
+class UserModelSerializer(DynamicFieldsModelSerializer):
+    """Serialize user details"""
+
+    display = serializers.SerializerMethodField('field_display')
+
+    class Meta:
+        depth = 1
+        model = User
+        fields = ['id', 'display', 'email']
+
+    def field_display(self, obj):
+        return obj.username

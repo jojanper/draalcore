@@ -98,6 +98,12 @@ class RestAPIBaseView(APIView):
             return api_response(ResponseData(message=e.args[0]))
 
 
+class RestAPINoAuthView(RestAPIBaseView):
+    """ReST API base class that requires no authentication"""
+    permission_classes = []
+    authentication_classes = []
+
+
 class RestAPIBasicAuthView(RestAPIBaseView):
     """ReST API base class with token, session, and basic auth authentication"""
 

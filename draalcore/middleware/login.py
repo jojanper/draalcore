@@ -97,3 +97,7 @@ class AutoLogout:
             pass
 
         request.session['last_touch'] = DateTimeSerializer(datetime.now()).encode
+
+    @staticmethod
+    def expires():
+        return datetime.now() + timedelta(0, settings.AUTO_LOGOUT_DELAY, 0)
