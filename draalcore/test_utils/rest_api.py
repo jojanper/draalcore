@@ -14,6 +14,17 @@ from draalcore.test_utils.connection import ClientConnectionUtility
 logger = logging.getLogger(__name__)
 
 
+class AuthAPI(ClientConnectionUtility):
+    """Auth API for testing"""
+
+    def login(self, username, password):
+        data = dict(username=username, password=password)
+        return self.post(reverse('rest-api-login'), data)
+
+    def logout(self):
+        return self.post(reverse('rest-api-logout'), {})
+
+
 class FileUploadAPI(ClientConnectionUtility):
     """File upload API for testing"""
 
