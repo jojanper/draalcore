@@ -38,6 +38,7 @@ npm run build
 ### Create release
 ```
 npm run release -- --version=<major.minor.patch>
+npm run release -- --version=<major.minor.patch> --remotes=remote1,remote2 (optional)
 ```
 
 ## Project structure
