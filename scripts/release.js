@@ -10,9 +10,12 @@ const logger = require('log-symbols');
 
 
 if (!options.version) {
-    console.log(logger.error, 'No --version=<major.minor.patch> argument defined!');
+    console.log(logger.error, 'No --version=<major.minor.patch> option defined!');
     process.exit(1);
 }
+
+// Available remotes
+const remotes = (options.remotes) ? options.remotes.split(',') : ['origin'];
 
 // Python version file generator
 var pyVersion = [
@@ -35,10 +38,13 @@ var cmds = [
     'git add package.json',
     'git add draalcore/__init__.py',
     'git commit -m "Release ' + options.version + '"',
-    'git tag -a v' + options.version + ' -m "Release ' + options.version + '"',
-    'git push origin v' + options.version,
-    'git push origin master'
+    'git tag -a v' + options.version + ' -m "Release ' + options.version + '"'
 ];
+
+for (let remote of remotes) {
+    cmds.push(format('git push %s v%s', remote, options.version));
+    cmds.push(format('git push %s master', remote));
+}
 
 shelljs.exec(cmds.join(' && '), function(code) {
     process.exit(code);
