@@ -20,7 +20,7 @@
     "test": "node scripts/unittest",
     "cibuild": "npm run lint && npm test",
     "release": "node scripts/release",
-    "push-master": "for r in $(git remote); do git push $r master; done"
+    "push-remote": "for r in $(git remote); do git push $r master; done"
   },
   "keywords": [
     "python",
