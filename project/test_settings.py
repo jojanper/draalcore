@@ -1,3 +1,4 @@
+import os  # noqa
 import sys  # noqa
 from settings import *  # noqa
 
@@ -5,7 +6,13 @@ USE_CACHING = False
 DEBUG = False
 TEST_URLS = True
 
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+# Select Django's test runner or nose runner
+if os.environ.get('DJANGO_TEST_RUNNER', False):
+    TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+else:
+    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+    NOSE_ARGS = ['--with-spec', '--spec-color']
+    INSTALLED_APPS += ('django_nose',)
 
 # Make tests faster
 DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}  # noqa

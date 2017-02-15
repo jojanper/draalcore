@@ -16,7 +16,7 @@ from draalcore.rest.mixins import FactoryDeleteMixin
 
 
 class ResponseDataTestCase(BaseTestUser):
-    """Test ResponseData class"""
+    """ResponseData class"""
 
     def test_response_data_repr(self):
         """ResponseData has readable representation of the object."""
@@ -32,7 +32,7 @@ class ResponseDataTestCase(BaseTestUser):
 
 
 class RequestDataTestCase(BaseTestUser):
-    """Test RequestData class"""
+    """RequestData class"""
 
     def initialize(self):
         self.request = MagicMock(GET={}, method='GET', DATA={'test': 'new'})
@@ -64,7 +64,7 @@ class RequestDataTestCase(BaseTestUser):
 
 
 class FactoryDeleteMixinTestCase(BaseTestUser):
-    """Test FactoryDeleteMixin."""
+    """FactoryDeleteMixin."""
 
     def test_factory_delete_mixin(self):
         """HTTP DELETE through factory calls delete method."""
@@ -83,7 +83,7 @@ class FactoryDeleteMixinTestCase(BaseTestUser):
 
 
 class APITestCase(BaseTestUser):
-    """Test HTTP GET, PUT, POST, PATCH and DELETE ReST API calls"""
+    """HTTP GET, PUT, POST, PATCH and DELETE ReST API calls"""
 
     def initialize(self):
         self.api = HttpAPI(self)

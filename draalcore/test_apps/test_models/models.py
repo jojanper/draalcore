@@ -19,6 +19,8 @@ __status__ = "Development"
 class TestModel(ModelLogger):
     """Simple test model that can be used only internally"""
 
+    __test__ = False
+
     EXTERNAL_API = False
     SERIALIZER = 'TestModelSerializer'
 
@@ -33,6 +35,8 @@ class TestModel(ModelLogger):
 
 class TestModelBaseModel(BaseModel):
     """Model that is derived from BaseModel"""
+
+    __test__ = False
 
     EXTERNAL_API = False
 
@@ -49,6 +53,8 @@ class TestModel2Manager(ModelBaseManager):
 
 class TestModel2(ModelLogger):
     """Simple test model that can be accessed also externally (e.g., via ReST API)"""
+
+    __test__ = False
 
     EXTERNAL_API = True
     SERIALIZER = 'TestModel2Serializer'
@@ -89,6 +95,8 @@ class TestModel2(ModelLogger):
 class TestModel3(models.Model):
     """Simple test model that don't have serializer defined"""
 
+    __test__ = False
+
     EXTERNAL_API = True
 
     name = models.CharField(max_length=256, blank=True, null=True)
@@ -102,6 +110,8 @@ class TestModel3(models.Model):
 
 class TestModel4(ModelLogger):
     """Simple test model that has invalid serializer defined"""
+
+    __test__ = False
 
     EXTERNAL_API = True
     SERIALIZER = 'TestModel4Serializer'
@@ -117,6 +127,8 @@ class TestModel4(ModelLogger):
 
 class TestModel5(ModelLogger):
     """Simple test model that has serializer object attribute defined but not implemented"""
+
+    __test__ = False
 
     EXTERNAL_API = True
     SERIALIZER_OBJECT = 'TestModel5SerializerObject'
@@ -137,6 +149,8 @@ class TestModel6Manager(ModelBaseManager):
 
 class TestModel6(ModelLogger):
     """Simple test model that has serializer object attribute defined and implemented"""
+
+    __test__ = False
 
     EXTERNAL_API = True
     SERIALIZER_OBJECT = 'TestModel6SerializerObject'

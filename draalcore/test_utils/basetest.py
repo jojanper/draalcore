@@ -66,11 +66,7 @@ class BaseTestUser(BaseTest):
     def initialize(self):
         pass
 
-    def close_test(self):
-        pass
-
     def tearDown(self):
-        self.close_test()
         super(BaseTestUser, self).tearDown()
         self.logout()
         self.user.delete()

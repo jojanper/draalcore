@@ -10,7 +10,7 @@ from draalcore.auth.backend import GoogleOAuth2Backend, TwitterOAuthBackend, Fac
 
 class BackendTestCaseMixin(object):
 
-    def backend_test(self, obj, response, ref_username):
+    def backend_validation(self, obj, response, ref_username):
 
         count = User.objects.all().count()
 
@@ -66,7 +66,7 @@ class GoogleOAuth2BackendTestCase(BackendTestCaseMixin, BaseTest):
             'email': 'test@case.com'
         }
 
-        self.backend_test(GoogleOAuth2Backend(), response, 'google-{}'.format(response['id']))
+        self.backend_validation(GoogleOAuth2Backend(), response, 'google-{}'.format(response['id']))
 
 
 class TwitterOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
@@ -81,7 +81,7 @@ class TwitterOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
             'email': 'test@case.com'
         }
 
-        self.backend_test(TwitterOAuthBackend(), response, 'twitter-{}'.format(response['id']))
+        self.backend_validation(TwitterOAuthBackend(), response, 'twitter-{}'.format(response['id']))
 
 
 class FacebookOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
@@ -97,7 +97,7 @@ class FacebookOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
             'email': 'test@case.com'
         }
 
-        self.backend_test(FacebookOAuthBackend(), response, 'fb-{}'.format(response['id']))
+        self.backend_validation(FacebookOAuthBackend(), response, 'fb-{}'.format(response['id']))
 
 
 class OneDriveOAuth2BackendTestCase(BackendTestCaseMixin, BaseTest):
@@ -109,4 +109,4 @@ class OneDriveOAuth2BackendTestCase(BackendTestCaseMixin, BaseTest):
         user = MagicMock(id=1, display_name="Test Test")
         response = MagicMock(user=user)
 
-        self.backend_test(OneDriveOAuth2Backend(), response, 'od-{}'.format(user.id))
+        self.backend_validation(OneDriveOAuth2Backend(), response, 'od-{}'.format(user.id))
