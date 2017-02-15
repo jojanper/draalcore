@@ -12,7 +12,7 @@ if os.environ.get('DJANGO_TEST_RUNNER', False):
 else:
     TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
     NOSE_ARGS = ['--with-spec', '--spec-color']
-    INSTALLED_APPS += ('django_nose',)
+    INSTALLED_APPS += ('django_nose',)  # noqa
 
 # Make tests faster
 DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}  # noqa
