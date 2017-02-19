@@ -29,7 +29,7 @@ class TestModel(ModelLogger):
     class Meta:
         db_table = 'testmodel'
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s(%s,%s)" % (self.__class__.__name__, self.id, self.name)
 
 
@@ -85,7 +85,7 @@ class TestModel2(ModelLogger):
     class Meta:
         db_table = 'testmodel2'
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s(%s,%s,%s)" % (self.__class__.__name__, self.id, self.name, self.model1)
 
     def serialize_type(self):
@@ -104,7 +104,7 @@ class TestModel3(models.Model):
     class Meta:
         db_table = 'testmodel3'
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s(%s,%s)" % (self.__class__.__name__, self.id, self.name)
 
 
@@ -121,7 +121,7 @@ class TestModel4(ModelLogger):
     class Meta:
         db_table = 'testmodel4'
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s(%s,%s)" % (self.__class__.__name__, self.id, self.name)
 
 
@@ -138,7 +138,7 @@ class TestModel5(ModelLogger):
     class Meta:
         db_table = 'testmodel5'
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s(%s,%s)" % (self.__class__.__name__, self.id, self.name)
 
 

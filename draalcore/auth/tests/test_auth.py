@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import json
-import httplib
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
 from mock import patch, MagicMock
 from django.core.urlresolvers import reverse
 
@@ -361,9 +364,8 @@ class AuthOneDriveTestCase(BaseTestUser):
         location = response.header['Location']
 
         # AND it points to OneDrive site
-        self.logging(location)
-        ref_url = 'https://login.live.com/oauth20_authorize.srf?scope=wl.signin+offline_access+onedrive.readonly'
-        self.assertTrue(ref_url in location)
+        self.assertTrue('https://login.live.com/oauth20_authorize.srf?' in location)
+        self.assertTrue('scope=wl.signin+offline_access+onedrive.readonly' in location)
 
         # AND callback URL is present
         self.assertTrue('redirect_uri=' in location)

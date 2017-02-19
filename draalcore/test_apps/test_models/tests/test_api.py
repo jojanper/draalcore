@@ -35,7 +35,7 @@ class RequestDataTestCase(BaseTestUser):
     """RequestData class"""
 
     def initialize(self):
-        self.request = MagicMock(GET={}, method='GET', DATA={'test': 'new'})
+        self.request = MagicMock(GET={}, method='GET', data={'test': 'new'})
 
     def test_request_data_repr(self):
         """RequestData has readable representation of the object."""

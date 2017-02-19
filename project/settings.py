@@ -324,4 +324,4 @@ logging.config.dictConfig(LOGGING)
 
 from .developer_keys import *  # noqa
 from .ui_applications import *  # noqa
-from local_settings import *  # noqa
+from .local_settings import *  # noqa

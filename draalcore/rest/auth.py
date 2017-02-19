@@ -4,6 +4,7 @@
 
 # System imports
 import base64
+import binascii
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from rest_framework import authentication, exceptions, HTTP_HEADER_ENCODING
@@ -41,7 +42,7 @@ class RestAuthentication(authentication.BaseAuthentication):
 
         try:
             auth_parts = base64.b64decode(auth[1]).decode(HTTP_HEADER_ENCODING).partition(':')
-        except (TypeError, UnicodeDecodeError):
+        except (TypeError, UnicodeDecodeError, binascii.Error):
             msg = 'Invalid basic header. Credentials not correctly base64 encoded'
             raise exceptions.AuthenticationFailed(msg)
 

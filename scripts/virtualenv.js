@@ -10,13 +10,14 @@ const options = require('minimist')(process.argv.slice(1));
 
 const folder = 'draalcore';
 const python = options.python || '/usr/bin/python2.7';
+const virtualFolder = options.virtualname || 'virtualenv2.7';
 
 commands = [
-    'mkdir -p virtualenv',
-    'cd virtualenv',
+    format('mkdir -p %s', virtualFolder),
+    format('cd %s', virtualFolder),
     format('virtualenv -p %s --no-site-packages %s', python, folder),
     'cd ..',
-    format('. ./virtualenv/%s/bin/activate', folder),
+    format('. ./%s/%s/bin/activate', virtualFolder, folder),
     'npm run prepare'
 ];
 

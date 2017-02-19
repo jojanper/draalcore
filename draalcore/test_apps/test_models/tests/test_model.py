@@ -3,6 +3,7 @@
 """Model related tests"""
 
 # System imports
+import six
 import logging
 from django.db import models
 
@@ -251,9 +252,9 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
 
         # AND it should have valid data
         for item in response.data:
-            keys = item.keys()
+            keys = [_item for _item in six.iterkeys(item)]
             self.assertEqual(len(keys), 3)
-            self.assertEqual(keys, ['model', 'actions', 'app_label'])
+            self.assertEqual(set(keys), set(['model', 'actions', 'app_label']))
 
         # AND it contains also UI application models
         self.assertTrue(any('test' in d['app_label'] for d in response.data))

@@ -9,10 +9,16 @@
 ```
 npm install
 npm run setup
-source virtualenv/draalcore/bin/activate
+source virtualenv2.7/draalcore/bin/activate
 ```
 
-This installs NPM, virtualenv and library (both npm and python) dependencies.
+This installs NPM, virtualenv and library (both npm and python) dependencies. Default python version
+is 2.7. To install other python versions under virtualenv:
+
+```
+npm run setup -- --virtualname=virtualenv3.4 --python=/usr/bin/python3.4
+source virtualenv3.4/draalcore/bin/activate
+```
 
 ### Run Python code styling
 ```

@@ -4,7 +4,10 @@
 
 # System imports
 import logging
-from urllib import urlencode
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 from django.core.urlresolvers import reverse
 
 # Project imports

@@ -4,4 +4,4 @@ node_modules
 draalcore.sqlite3
 .vscode
 .coverage
-virtualenv
+virtualenv*

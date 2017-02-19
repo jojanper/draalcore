@@ -4,7 +4,10 @@
 
 # System imports
 import json
-import httplib
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
 
 
 class URLResponse(object):
@@ -27,7 +30,7 @@ class URLResponse(object):
     @property
     def data(self):
         try:
-            return json.loads(self._response.content)
+            return json.loads(self._response.content.decode('utf-8'))
         except ValueError:
             return self._response.content
 

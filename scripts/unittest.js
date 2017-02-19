@@ -15,7 +15,7 @@ const app = options.testapp || '';
 const baseRunner = (options.baserunner) ? 'DJANGO_TEST_RUNNER=1' : '';
 
 commands = [
-    format('%s REUSE_DB=1 coverage run --source=. manage.py test --verbosity=2 --settings=project.test_settings %s', baseRunner, app),
+    format('%s coverage run --source=. manage.py test --verbosity=2 --settings=project.test_settings %s', baseRunner, app),
     'coverage report --omit=./virtualenv**,setup.py -m'
 ];
 
