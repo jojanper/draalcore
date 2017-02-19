@@ -7,6 +7,7 @@
 const shelljs = require('shelljs');
 const options = require('minimist')(process.argv.slice(1));
 const logger = require('log-symbols');
+const format = require('util').format;
 
 
 if (!options.version) {
