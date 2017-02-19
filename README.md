@@ -27,7 +27,8 @@ npm run lint
 
 ### Run unit tests
 ```
-npm test
+npm test (using django-nose test runner)
+npm test -- --djangorunner=true (using django's own test runner, faster)
 ```
 
 ### Run code styling + unit tests
