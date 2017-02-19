@@ -5,7 +5,10 @@
 # System imports
 import cgi
 import logging
-import urllib
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 import oauth2 as oauth
 from django.conf import settings
 import requests
@@ -44,7 +47,7 @@ class TwitterOAuth(Base3rdPartyAuth):
         params = {'oauth_callback': '{}{}'.format(self.get_callback_url(), redirect_url)}
 
         # Get a request token from Twitter.
-        params = urllib.urlencode(params)
+        params = urlencode(params)
         url = request_token_url + '?' + params
         resp, content = client.request(url, "GET")
         if resp['status'] != '200':

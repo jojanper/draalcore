@@ -4,12 +4,13 @@
 
 # System imports
 import sys
+import six
+import abc
 import logging
 import importlib
 from django.db import models
 from django.conf import settings
 from django.db.models.query import QuerySet
-from abc import ABCMeta, abstractmethod
 from django.core.urlresolvers import reverse
 
 # Project imports
@@ -127,27 +128,25 @@ class DeleteAction(EditAction):
         return None
 
 
+@six.add_metaclass(abc.ABCMeta)
 class AbstractModelGetAction(BaseAction):
     """HTTP GET action for models."""
 
     ALLOWED_METHODS = ['GET']
 
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
+    @abc.abstractmethod
     def execute(self):
         """Must be defined in the implementing class"""
 
 
+@six.add_metaclass(abc.ABCMeta)
 class AbstractModelItemGetAction(EditAction):
     """HTTP GET action for model item."""
 
     ACTION = None
     ALLOWED_METHODS = ['GET']
 
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
+    @abc.abstractmethod
     def _execute(self, model_obj):
         """Must be defined in the implementing class"""
 
@@ -544,7 +543,7 @@ class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
         # UI only application views but enabled from backend
         if hasattr(settings, 'UI_APPLICATION_MODELS'):
             for item in settings.UI_APPLICATION_MODELS:
-                for app, _models in item.iteritems():
+                for app, _models in six.iteritems(item):
                     for model in _models:
                         data.append({'app_label': app, 'model': model['name'], 'actions': []})
 

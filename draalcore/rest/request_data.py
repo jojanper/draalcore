@@ -18,7 +18,7 @@ class RequestData(object):
         self._queryset = None
 
         try:
-            self._data_params = request.DATA.copy() if hasattr(request, 'DATA') else request.data.copy()
+            self._data_params = request.data.copy()
         except AttributeError:
             self._data_params = {}
 

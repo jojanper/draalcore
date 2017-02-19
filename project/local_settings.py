@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Add profiling support
-from settings import MIDDLEWARE_CLASSES, INSTALLED_APPS
+from .settings import MIDDLEWARE_CLASSES, INSTALLED_APPS
 
 # http://127.0.0.1:8000/?profile
 # MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.InstrumentMiddleware', )

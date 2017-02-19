@@ -3,6 +3,7 @@
 """Model actions related tests"""
 
 # System imports
+import six
 import logging
 import importlib
 from mock import patch
@@ -48,7 +49,8 @@ class ModelActionsTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.success)
 
         # AND correct actions are returned
-        self.assertEqual(response.data.keys(), ['create', 'create-new'])
+        keys = [item for item in six.iterkeys(response.data)]
+        self.assertEqual(set(keys), set(['create', 'create-new']))
 
         # AND action items return correct data fields
         for item in response.data:
@@ -64,7 +66,8 @@ class ModelActionsTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.success)
 
         # AND correct actions are returned
-        self.assertEqual(response.data.keys(), ['create', 'create-new', 'get'])
+        keys = [item for item in six.iterkeys(response.data)]
+        self.assertEqual(set(keys), set(['create', 'create-new', 'get']))
 
         # ----------
 
@@ -78,7 +81,8 @@ class ModelActionsTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.success)
 
         # AND correct actions are returned
-        self.assertEqual(response.data.keys(), ['edit', 'delete'])
+        keys = [item for item in six.iterkeys(response.data)]
+        self.assertEqual(set(keys), set(['edit', 'delete']))
 
         # AND action items return correct data fields
         for item in response.data:
@@ -95,7 +99,8 @@ class ModelActionsTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.success)
 
         # AND correct actions are returned
-        self.assertEqual(response.data.keys(), ['edit', 'get2', 'delete'])
+        keys = [item for item in six.iterkeys(response.data)]
+        self.assertEqual(set(keys), set(['edit', 'get2', 'delete']))
 
     def test_model_invalid_action(self):
         """Invalid action is called via ReST API"""

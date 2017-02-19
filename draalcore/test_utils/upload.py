@@ -26,7 +26,7 @@ def upload_file(api, method='test_upload1', with_file=True, test_file='test1', *
     else:
         upload_file = TEST_FILE_INVALID
 
-    with open(upload_file) as fp:
+    with open(upload_file, 'rb') as fp:
         attachment = {"name": "test upload"}
         if with_file:
             attachment['file'] = fp

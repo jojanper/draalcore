@@ -1,6 +1,6 @@
 import os  # noqa
 import sys  # noqa
-from settings import *  # noqa
+from .settings import *  # noqa
 
 USE_CACHING = False
 DEBUG = False
@@ -15,7 +15,7 @@ else:
     INSTALLED_APPS += ('django_nose',)  # noqa
 
 # Make tests faster
-DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}  # noqa
+DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}  # noqa
 
 CELERY_ALWAYS_EAGER = True
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
@@ -36,4 +36,5 @@ if 'draalcore.middleware.version.ApplicationVersionMiddleware' in MIDDLEWARE_CLA
 # to skip migrations while testing (tables will still be created for the apps' models).
 if 'test' in sys.argv[1:]:
     MIGRATION_MODULES = {
+        'auth': None
     }

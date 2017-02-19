@@ -3,6 +3,7 @@
 """Base model(s)"""
 
 # System imports
+import six
 import json
 import logging
 from copy import copy
@@ -385,7 +386,7 @@ class ModelLogger(EventHandlingMixin, BaseDetails):
         if isinstance(changed_fields, dict):
             # Determine change message for each field that has changed
             changes = {}
-            for key, value in changed_fields.iteritems():
+            for key, value in six.iteritems(changed_fields):
                 if self.is_tracked_field(key):
                     if value is not ModelFieldDoesNotExist:
                         if created:

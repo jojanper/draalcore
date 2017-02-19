@@ -50,7 +50,7 @@ class GoogleOAuth2(Base3rdPartyAuth):
         # Redirect URL present?
         redirect_url = self.get_redirect_url(request)
         if redirect_url:
-            redirect_url = '{}{}'.format('next', base64.encodestring(redirect_url))
+            redirect_url = '{}{}'.format('next', base64.encodestring(redirect_url.encode()))
 
         # Round-strip state for validating the callback message; it is a combination of secret token
         # and possible URL redirect value
@@ -93,7 +93,7 @@ class GoogleOAuth2(Base3rdPartyAuth):
         # See if callback parameters include any redirect URL
         next_state = None
         if len(split_state) > 1:
-            next_state = base64.decodestring(split_state[1])
+            next_state = base64.decodestring(split_state[1].encode())
 
         # User logged in, go to application page
         return HttpResponseRedirect(next_state if next_state else '/')

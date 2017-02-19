@@ -5,8 +5,16 @@
 # System imports
 import json
 import logging
-import urllib
-import urlparse
+try:
+    from urllib import quote_plus
+except:
+    from urllib.parse import quote_plus
+
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
+
 import oauth2 as oauth
 from django.conf import settings
 from django.http import HttpResponseRedirect
@@ -33,7 +41,7 @@ class FacebookOAuth(Base3rdPartyAuth):
         """Request and prepare URL for login using Facebook account."""
         base_url = '{}?client_id={}&redirect_uri={}&scope={}'
         return base_url.format(FACEBOOK_REQUEST_TOKEN_URL, settings.FACEBOOK_APP_ID,
-                               urllib.quote_plus(self.get_callback_url()), 'email')
+                               quote_plus(self.get_callback_url()), 'email')
 
     def authorize(self, request):
 
