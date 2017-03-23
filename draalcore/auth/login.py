@@ -6,10 +6,10 @@
 from django.contrib.auth import authenticate, login, logout
 
 # Project imports
-from .response_data import ResponseData
-from .base_serializers import UserModelSerializer
-from .handlers import PostMixin, RestAPINoAuthView
 from draalcore.middleware.login import AutoLogout
+from draalcore.rest.response_data import ResponseData
+from draalcore.rest.base_serializers import UserModelSerializer
+from draalcore.rest.handlers import PostMixin, RestAPINoAuthView
 
 
 class LoginHandler(PostMixin, RestAPINoAuthView):

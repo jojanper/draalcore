@@ -3,7 +3,7 @@
 """Authentication endpoint URLs"""
 
 # System imports
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 # Project imports
 from .views import ExtAuthView, ExtAuthCallbackView
@@ -15,6 +15,9 @@ __status__ = "Development"
 
 
 urlpatterns = [
+
+    # Authentication and user registration APIs
+    url(r'^auth/', include('draalcore.auth.auth_urls')),
 
     # OAuth2 callback URL
     url(r'^ext-auth/oauth2-callback/(?P<provider>[^/]+)$', ExtAuthCallbackView.as_view(), name='oauth2-callback'),
