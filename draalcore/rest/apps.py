@@ -7,4 +7,4 @@ class RestConfig(AppConfig):
 
     def ready(self):
         # Import signal handlers
-        from draalcore.rest.handlers import create_auth_token
+        from draalcore.rest.handlers import create_auth_token  # noqa
