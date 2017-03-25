@@ -4,14 +4,23 @@
 # Project imports
 import base64
 from rest_framework import HTTP_HEADER_ENCODING
+from rest_framework.authtoken.models import Token
 
 # System imports
 from .test_upload import FileUploadMixin
 from draalcore.test_utils.basetest import BaseTestUser
 
 
+class TokenAPITestCase(BaseTestUser):
+    """Test token acquiring and retrieval"""
+
+    def test_token_creation(self):
+        """Token is created for new user"""
+        self.assertEqual(len(Token.objects.get(user=self.user).key), 40)
+
+
 class HttpAuthorizationTestCase(FileUploadMixin, BaseTestUser):
-    """Test Basic auth over Rest API"""
+    """Test Basic Auth over Rest API"""
 
     def _http_auth_call(self, auth_header):
         authorization = 'Basic {}'.format(auth_header)
