@@ -14,6 +14,8 @@ from draalcore.rest.serializers import (BaseSerializerDataItemHandler,
 from draalcore.rest.actions import (ModelActionHandler,
                                     AppActionHandler,
                                     ActionsListingHandler,
+                                    AppPublicActionHandler,
+                                    ActionsPublicListingHandler,
                                     SystemAppsModelsListingHandler)
 
 __author__ = "Juha Ojanpera"
@@ -22,7 +24,7 @@ __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
 
-prefix = getattr(settings, 'DRAALCORE_REST_SYSTEM_BASE_PREFIX', 'system')
+prefix = getattr(settings, 'DRAALCORE_REST_SYSTEM_BASE_PREFIX', 'apps')
 app_prefix = '{}/(?P<app>[A-Za-z0-9\-_]+)'.format(prefix)
 model_prefix = '{}/(?P<model>[A-Za-z0-9]+)'.format(app_prefix)
 
@@ -56,6 +58,16 @@ urlpatterns = [
     url(r'{}/meta$'.format(model_prefix),
         BaseSerializerModelMetaHandler.as_view(),
         name='rest-api-model-meta'),
+
+    url(r'{}/public-actions/(?P<action>[A-Za-z0-9\-]+)$'.format(app_prefix),
+        AppPublicActionHandler.as_view(),
+        {'noauth': True},
+        name='rest-api-app-public-action'),
+
+    url(r'{}/public-actions$'.format(app_prefix),
+        ActionsPublicListingHandler.as_view(),
+        {'noauth': True},
+        name='rest-api-app-public-actions-listing'),
 
     url(r'{}/actions/(?P<action>[A-Za-z0-9\-]+)$'.format(app_prefix),
         AppActionHandler.as_view(),

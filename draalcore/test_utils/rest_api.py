@@ -27,6 +27,10 @@ class AuthAPI(ClientConnectionUtility):
     def logout(self):
         return self.post(reverse('rest-api-logout'), {})
 
+    def register(self, data):
+        url = reverse('rest-api-app-action', kwargs={'app': 'auth', 'action': 'register'})
+        return getattr(self, 'post')(url, data)
+
 
 class FileUploadAPI(ClientConnectionUtility):
     """File upload API for testing"""
@@ -116,8 +120,16 @@ class GenericAPI(ClientConnectionUtility):
         url = reverse('rest-api-app-actions-listing', kwargs={'app': app})
         return getattr(self, 'get')(url)
 
+    def app_public_actions(self, app):
+        url = reverse('rest-api-app-public-actions-listing', kwargs={'app': app})
+        return getattr(self, 'get')(url)
+
     def app_action(self, app, action, method='get', **kwargs):
         url = reverse('rest-api-app-action', kwargs={'app': app, 'action': action})
+        return getattr(self, method.lower())(url, **kwargs)
+
+    def app_public_action(self, app, action, method='get', **kwargs):
+        url = reverse('rest-api-app-public-action', kwargs={'app': app, 'action': action})
         return getattr(self, method.lower())(url, **kwargs)
 
     def auth_request(self, name, params=None):

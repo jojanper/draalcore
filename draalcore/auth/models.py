@@ -1,1 +1,1 @@
-from .registration.models import UserAccount  # noqa
+from .registration.models import UserAccountProfile  # noqa

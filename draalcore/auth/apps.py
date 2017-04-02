@@ -9,4 +9,4 @@ class AuthConfig(BaseAppConfig):
     def ready(self):
         from .registration.actions import RegisterUserAction
 
-        self.actions = [RegisterUserAction]
+        self.noauth_actions = [RegisterUserAction]
