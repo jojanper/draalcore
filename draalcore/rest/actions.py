@@ -103,14 +103,14 @@ class CreateActionWithParameters(CreateAction):
     def _validate_parameters(self):
         """Validate data parameters, raise DataParsingError on error"""
         errors = []
-        for key in self.PARAMETERS.iterkeys():
+        for key in six.iterkeys(self.PARAMETERS):
             if key not in self.request_obj.data_params:
                 errors.append(key)
 
         if errors:
             raise DataParsingError('Following data items are missing: {}'.format(', '.join(errors)))
 
-        for key, params in self.PARAMETERS.iteritems():
+        for key, params in six.iteritems(self.PARAMETERS):
             params[0].validate_type(key, self.request_obj.data_params.get(key), params[1])
 
     def execute(self, *args, **kwargs):
