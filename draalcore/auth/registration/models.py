@@ -7,6 +7,10 @@ import hashlib
 import random
 from django.db import models
 from django.contrib.auth.models import User
+try:
+    bool(type(unicode))
+except NameError:
+    unicode = str
 
 # Project imports
 from draalcore.models.base_model import ModelLogger, ModelBaseManager
