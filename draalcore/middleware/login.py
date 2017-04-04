@@ -3,6 +3,7 @@
 """Login related middleware processors"""
 
 # System imports
+import logging
 from re import compile
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -14,6 +15,9 @@ __author__ = "Juha Ojanpera"
 __copyright__ = "Copyright 2013-2016"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
+
+
+logger = logging.getLogger(__name__)
 
 
 EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
@@ -40,7 +44,7 @@ class LoginRequiredMiddleware:
         assert hasattr(request, 'user'), login_error_text
         if not request.user.is_authenticated():
             path = request.path_info.lstrip('/')
-            if not any(m.match(path) for m in EXEMPT_URLS):
+            if not any(m.search(path) for m in EXEMPT_URLS):
                 return HttpResponseRedirect(settings.LOGIN_URL + '?next=' + request.path)
 
 

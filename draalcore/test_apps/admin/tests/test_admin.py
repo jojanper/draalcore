@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 class AdminAppTestCase(TestModelMixin, BaseTestUser):
     """Admin app tests"""
 
+    APP = 'admin'
+
     def test_unsupported_action(self):
         """Actions for unsupported applications are queried"""
 
@@ -29,13 +31,11 @@ class AdminAppTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.error)
 
     def test_admin_app_actions(self):
-        """Admin app actions is queried"""
+        """Admin app actions requiring user authentication are queried"""
 
         # GIVEN admin app
-        app = 'admin'
-
         # WHEN quering the application level actions
-        response = self.api.app_actions(app)
+        response = self.api.app_actions(self.APP)
 
         # THEN it should succeed
         self.assertTrue(response.success)
@@ -45,7 +45,7 @@ class AdminAppTestCase(TestModelMixin, BaseTestUser):
         for action, data in six.iteritems(response.data):
 
             # WHEN calling available actions
-            response = self.api.app_action(app, action, data['method'], data=None)
+            response = self.api.app_action(self.APP, action, data['method'], data=None)
 
             # THEN it should succeed
             self.assertTrue(response.success)
@@ -56,7 +56,39 @@ class AdminAppTestCase(TestModelMixin, BaseTestUser):
             # -----
 
             # WHEN calling action using HTTP method that is not supported
-            response = self.api.app_action(app, action, 'GET')
+            response = self.api.app_action(self.APP, action, 'GET')
 
             # THEN it should fail
             self.assertTrue(response.error)
+
+    def test_admin_app_public_actions(self):
+        """Public admin actions are queried"""
+
+        # GIVEN unauthenticated user
+        self.logout()
+
+        # WHEN quering the application level actions
+        response = self.api.app_public_actions(self.APP)
+
+        # THEN it should succeed
+        self.assertTrue(response.success)
+
+        # AND expected action data is received
+        self.assertTrue('admin-public-action' in response.data)
+        self.assertFalse(response.data['admin-public-action']['authenticate'], False)
+
+    def test_admin_app_public_action(self):
+        """Public admin action is executed"""
+
+        # GIVEN unauthenticated user
+        self.logout()
+
+        # WHEN executing action
+        kwargs = {'data': None}
+        response = self.api.app_public_action(self.APP, 'admin-public-action', 'post', **kwargs)
+
+        # THEN it should succeed
+        self.assertTrue(response.success)
+
+        # AND expected action data is received
+        self.assertTrue('Ok' in response.data)

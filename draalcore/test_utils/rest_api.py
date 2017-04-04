@@ -28,7 +28,7 @@ class AuthAPI(ClientConnectionUtility):
         return self.post(reverse('rest-api-logout'), {})
 
     def register(self, data):
-        url = reverse('rest-api-app-action', kwargs={'app': 'auth', 'action': 'register'})
+        url = reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': 'register'})
         return getattr(self, 'post')(url, data)
 
 

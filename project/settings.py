@@ -122,6 +122,8 @@ SOCIAL_AUTH_USER_PASSWORD = '!social_auth'
 LOGIN_EXEMPT_URLS = (
     r'^admin',
     r'^api/auth/*',
+    r'^api/.+/public-actions$',
+    r'^api/.+/public-actions/.+',
     r'^$',  # allow the root to be viewed by all
 )
 

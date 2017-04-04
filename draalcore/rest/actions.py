@@ -543,7 +543,7 @@ class AppActionHandler(AppActionMixin, RestAPIBasicAuthView):
     pass
 
 
-class AppPublicActionHandler(AppActionHandler, RestAPINoAuthView):
+class AppPublicActionHandler(AppActionMixin, RestAPINoAuthView):
     """
     ReST API entry point for executing public application action.
     No user authentication required.
@@ -559,7 +559,7 @@ class ActionsListingHandler(ActionsListingMixin, RestAPIBasicAuthView):
     pass
 
 
-class ActionsPublicListingHandler(ActionsListingHandler, RestAPINoAuthView):
+class ActionsPublicListingHandler(ActionsListingMixin, RestAPINoAuthView):
     """
     ReST API entry point for listing public actions for application. No user
     authentication required for the actions.

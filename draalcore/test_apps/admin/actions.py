@@ -16,7 +16,7 @@ class CreateNewAction(CreateAction):
 
 
 class CreateNew2Action(CreateAction):
-    ACTION = 'admin-action'
+    ACTION = 'admin-public-action'
 
     def _execute(self):
         return 'Ok'
