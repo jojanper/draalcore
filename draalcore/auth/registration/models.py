@@ -13,6 +13,7 @@ except NameError:
     unicode = str
 
 # Project imports
+from draalcore.middleware.current_user import set_current_user
 from draalcore.models.base_model import ModelLogger, ModelBaseManager
 
 
@@ -25,15 +26,16 @@ class UserAccountManager(ModelBaseManager):
         new_user.is_active = False
         new_user.save()
 
-        # user_account_profile = self.create_account_profile(new_user)
+        return self.create_account_profile(new_user)
 
     def create_account_profile(self, user):
-        salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+        salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
         username = user.username
         if isinstance(username, unicode):
             username = username.encode('utf-8')
-        activation_key = hashlib.sha1(salt + username).hexdigest()
+        activation_key = hashlib.sha1('{}{}'.format(salt, username).encode('utf-8')).hexdigest()
 
+        set_current_user(user)
         return self.create(user=user, activation_key=activation_key)
 
 

@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from mock import patch
+
 from draalcore.test_utils.rest_api import AuthAPI
 from draalcore.test_utils.basetest import BaseTest
+from draalcore.auth.models import UserAccountProfile
 
 
 class UserRegistrationTestCase(BaseTest):
@@ -52,8 +55,11 @@ class UserRegistrationTestCase(BaseTest):
         self.assertTrue('errors' in response.data)
         self.assertEqual(response.data['errors'][0], err_text)
 
-    def test_user_registration(self):
+    @patch('draalcore.mailer.send_mail')
+    def test_user_registration(self, mailer_mock):
         """User registration parameters are received"""
+
+        mailer_mock.return_value = True
 
         # GIVEN registration parameters
         data = {
@@ -69,3 +75,12 @@ class UserRegistrationTestCase(BaseTest):
 
         # THEN it should succeed
         self.assertTrue(response.success)
+
+        # AND user account is available
+        accounts = UserAccountProfile.objects.all()
+        self.assertEqual(accounts.count(), 1)
+        self.assertEqual(accounts[0].user.username, data['username'])
+        self.assertEqual(accounts[0].user.email, data['email'])
+
+        # AND email is sent to user
+        self.assertEqual(mailer_mock.call_count, 1)

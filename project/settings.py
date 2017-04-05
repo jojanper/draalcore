@@ -41,6 +41,15 @@ PRODUCTION_ENVIRONMENT = False
 MANAGERS = ADMINS
 
 #
+# Subject-line prefix for email messages sent with django.core.mail.mail_admins or
+# django.core.mail.mail_managers. You’ll probably want to include the trailing space.
+#
+EMAIL_SUBJECT_PREFIX = '[draalcore] '
+DEFAULT_FROM_EMAIL = 'draalcore@gmail.com'
+
+ACCOUNT_ACTIVATION_SUBJECT = 'Account activation for draalcore'
+
+#
 # A list of strings representing the host/domain names that this Django
 # site can serve. This is a security measure to prevent an attacker from
 # poisoning caches and password reset emails with links to malicious hosts
