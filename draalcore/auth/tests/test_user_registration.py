@@ -55,6 +55,24 @@ class UserRegistrationTestCase(BaseTest):
         self.assertTrue('errors' in response.data)
         self.assertEqual(response.data['errors'][0], err_text)
 
+    def _test_duplicate_username(self, username):
+        """Username is already reserved for another user"""
+        data = {
+            'username': username,
+            'password': 'password',
+            'email': 'test@test.com',
+            'first_name': 'test',
+            'last_name': 'user'
+        }
+
+        # WHEN registering new user
+        response = self.auth_api.register(data)
+
+        # THEN it should fail
+        self.assertTrue(response.error)
+        error_text = 'Username {} is already reserved, please select another'.format(username)
+        self.assertEqual(response.data['errors'][0], error_text)
+
     @patch('draalcore.mailer.send_mail')
     def test_user_registration(self, mailer_mock):
         """User registration parameters are received"""
@@ -84,3 +102,5 @@ class UserRegistrationTestCase(BaseTest):
 
         # AND email is sent to user
         self.assertEqual(mailer_mock.call_count, 1)
+
+        self._test_duplicate_username(data['username'])

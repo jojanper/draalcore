@@ -47,7 +47,13 @@ MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = '[draalcore] '
 DEFAULT_FROM_EMAIL = 'draalcore@gmail.com'
 
+ACTIVATION_URL = ''
 ACCOUNT_ACTIVATION_SUBJECT = 'Account activation for draalcore'
+
+#
+# Number of days before account activation expires
+#
+ACCOUNT_ACTIVATION_DAYS = 7
 
 #
 # A list of strings representing the host/domain names that this Django
@@ -242,6 +248,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(PROJECT_ROOT, 'draalcore', 'templates')
         ],
 
         'OPTIONS': {
