@@ -4,7 +4,7 @@
 
 # System imports
 from django.conf import settings
-from django.db import models, transaction
+from django.db import transaction
 from collections import OrderedDict
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
