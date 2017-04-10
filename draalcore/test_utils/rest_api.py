@@ -31,6 +31,10 @@ class AuthAPI(ClientConnectionUtility):
         url = reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': 'register'})
         return getattr(self, 'post')(url, data)
 
+    def activate_user(self, data):
+        url = reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': 'activate'})
+        return getattr(self, 'post')(url, data)
+
 
 class FileUploadAPI(ClientConnectionUtility):
     """File upload API for testing"""

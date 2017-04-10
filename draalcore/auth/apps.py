@@ -7,6 +7,6 @@ class AuthConfig(BaseAppConfig):
     display_name = 'auth'
 
     def ready(self):
-        from .registration.actions import RegisterUserAction
+        from .registration.actions import RegisterUserAction, ActivateUserAction
 
-        self.noauth_actions = [RegisterUserAction]
+        self.noauth_actions = [RegisterUserAction, ActivateUserAction]

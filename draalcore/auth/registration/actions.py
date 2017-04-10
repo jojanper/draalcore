@@ -50,3 +50,16 @@ class RegisterUserAction(CreateActionWithParameters):
         }
 
         return render_to_string('registration/activation_email.txt', context)
+
+
+class ActivateUserAction(CreateActionWithParameters):
+    ACTION = 'activate'
+    MODEL = UserAccountProfile
+    DISPLAY_NAME = 'Activate user account'
+    PARAMETERS = OrderedDict([
+        ('activation_key', (StringFieldType, NotNullable))
+    ])
+
+    @transaction.atomic
+    def _execute(self):
+        return self.MODEL.objects.activate_user(**self.request_obj.data_params)
