@@ -35,6 +35,7 @@ class AuthAPITestCase(BaseTestUser):
         self.assertTrue('display' in response.data)
         self.assertTrue('email' in response.data)
         self.assertTrue('expires' in response.data)
+        self.assertTrue('token' in response.data)
 
     def test_logout(self):
         """User does sign-out"""
@@ -49,3 +50,28 @@ class AuthAPITestCase(BaseTestUser):
         # AND access to authenticated APIs is denied
         response = self.api.root_api()
         self.assertTrue(response.moved_temporarily)
+
+    def test_token(self):
+        """User retrieves authentication token"""
+
+        self.logout()
+
+        # GIVEN token API
+        api = self.auth_api
+
+        # WHEN user calls the API with invalid credentials
+        response = api.token(self.username, 'pw')
+
+        # THEN it should fail
+        self.assertTrue(response.error)
+
+        # -----
+
+        # WHEN user calls the API with valid credentials
+        response = api.token(self.username, self.password)
+
+        # THEN it should succeed
+        self.assertTrue(response.success)
+
+        # AND token is returned
+        self.assertTrue('token' in response.data)
