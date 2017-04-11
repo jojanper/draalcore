@@ -12,4 +12,4 @@ class AuthConfig(BaseAppConfig):
 
         # Authentication and user registration actions
         self.noauth_actions = [RegisterUserAction, ActivateUserAction,
-            LoginAction, LogoutAction, TokenAction]
+                               LoginAction, LogoutAction, TokenAction]

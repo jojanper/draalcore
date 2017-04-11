@@ -3,7 +3,7 @@
 """3rd party authentication endpoint URLs"""
 
 # System imports
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 # Project imports
 from .views import ExtAuthView, ExtAuthCallbackView
