@@ -41,6 +41,21 @@ PRODUCTION_ENVIRONMENT = False
 MANAGERS = ADMINS
 
 #
+# Subject-line prefix for email messages sent with django.core.mail.mail_admins or
+# django.core.mail.mail_managers. You’ll probably want to include the trailing space.
+#
+EMAIL_SUBJECT_PREFIX = '[draalcore] '
+DEFAULT_FROM_EMAIL = 'draalcore@gmail.com'
+
+ACTIVATION_URL = ''
+ACCOUNT_ACTIVATION_SUBJECT = 'Account activation for draalcore'
+
+#
+# Number of days before account activation expires
+#
+ACCOUNT_ACTIVATION_DAYS = 7
+
+#
 # A list of strings representing the host/domain names that this Django
 # site can serve. This is a security measure to prevent an attacker from
 # poisoning caches and password reset emails with links to malicious hosts
@@ -122,6 +137,8 @@ SOCIAL_AUTH_USER_PASSWORD = '!social_auth'
 LOGIN_EXEMPT_URLS = (
     r'^admin',
     r'^api/auth/*',
+    r'^api/.+/public-actions$',
+    r'^api/.+/public-actions/.+',
     r'^$',  # allow the root to be viewed by all
 )
 
@@ -231,6 +248,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(PROJECT_ROOT, 'draalcore', 'templates')
         ],
 
         'OPTIONS': {
@@ -283,6 +301,7 @@ INSTALLED_APPS = (
 
     'draalcore.auth',
     'draalcore.models',
+    'draalcore.rest',
     'draalcore.test_apps.test_models',
     'draalcore.test_apps.admin'
 )

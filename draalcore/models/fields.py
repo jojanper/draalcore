@@ -146,6 +146,14 @@ class IntegerListFieldType(BaseFieldType):
                     raise DataParsingError(msg)
 
 
+class Nullable(object):
+    null = True
+
+
+class NotNullable(Nullable):
+    null = False
+
+
 class AppModelTextField(AppFieldMixin, models.TextField):
     """TextField for models."""
 

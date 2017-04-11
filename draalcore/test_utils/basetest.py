@@ -56,7 +56,7 @@ class BaseTestUser(BaseTest):
         self.user.first_name = self.username
         self.user.last_name = self.username
         self.user.save()
-        self.login()
+        self.signin = self.login()
 
         self.api = GenericAPI(self)
         self.auth_api = AuthAPI(self)
@@ -69,13 +69,15 @@ class BaseTestUser(BaseTest):
     def tearDown(self):
         super(BaseTestUser, self).tearDown()
         self.logout()
-        self.user.delete()
+        if self.signin:
+            self.user.delete()
 
     def login(self):
-        self.client.login(username=self.username, password=self.password)
+        return self.client.login(username=self.username, password=self.password)
 
     def logout(self):
         self.client.logout()
+        self.signin = False
 
     def enable_superuser(self):
         self.logout()

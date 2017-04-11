@@ -14,7 +14,7 @@ from django.db.models.query import QuerySet
 from django.core.urlresolvers import reverse
 
 # Project imports
-from .handlers import PostMixin, GetMixin, RestAPIBasicAuthView
+from .handlers import PostMixin, GetMixin, RestAPIBasicAuthView, RestAPINoAuthView
 from .request_data import RequestData
 from .response_data import ResponseData
 from .serializer_object import SerializerModelDataObject
@@ -92,6 +92,29 @@ class CreateAction(BaseAction):
         return self.model_cls.objects.create_model(**self.request_obj.data_params)
 
     def execute(self, *args, **kwargs):
+        return self._execute(*args, **kwargs)
+
+
+class CreateActionWithParameters(CreateAction):
+    """Create action where required input parameters are explicitly defined."""
+
+    PARAMETERS = {}
+
+    def _validate_parameters(self):
+        """Validate data parameters, raise DataParsingError on error"""
+        errors = []
+        for key in six.iterkeys(self.PARAMETERS):
+            if key not in self.request_obj.data_params:
+                errors.append(key)
+
+        if errors:
+            raise DataParsingError('Following data items are missing: {}'.format(', '.join(errors)))
+
+        for key, params in six.iteritems(self.PARAMETERS):
+            params[0].validate_type(key, self.request_obj.data_params.get(key), params[1])
+
+    def execute(self, *args, **kwargs):
+        self._validate_parameters()
         return self._execute(*args, **kwargs)
 
 
@@ -413,7 +436,7 @@ class ActionsSerializer(object):
            Keys describe the name of action and corresponding value the details of the action.
         """
         app = AppsCollection().get_app(self.request_obj.kwargs['app'])
-        return app.serialize_actions(get_action_response_data)
+        return app.serialize_actions(get_action_response_data, self.request_obj.kwargs.get('noauth', False))
 
     def _serialize_model_actions(self):
         """
@@ -500,35 +523,59 @@ class ActionsSerializer(object):
 
 
 class ActionsListingMixin(GetMixin):
-    """Actions mixin handling model's available actions listing."""
+    """Actions mixin handling model's actions listing."""
 
     def _get(self, request_obj):
-        """Return available actions for the application model."""
+        """Return available actions for the model."""
         return ResponseData(ActionsSerializer(request_obj).serialize())
 
 
 class ModelActionHandler(ModelActionMixin, RestAPIBasicAuthView):
-    """ReST API entry point for executing application model action"""
+    """ReST API entry point for executing model action"""
     pass
 
 
 class AppActionHandler(AppActionMixin, RestAPIBasicAuthView):
-    """ReST API entry point for executing application level action"""
+    """
+    ReST API entry point for executing application level action. Action requires
+    user authentication.
+    """
+    pass
+
+
+class AppPublicActionHandler(AppActionMixin, RestAPINoAuthView):
+    """
+    ReST API entry point for executing public application action.
+    No user authentication required.
+    """
     pass
 
 
 class ActionsListingHandler(ActionsListingMixin, RestAPIBasicAuthView):
-    """ReST API entry point for listing available actions for application and/or model."""
+    """
+    ReST API entry point for listing actions for application. All actions require
+    user authentication.
+    """
+    pass
+
+
+class ActionsPublicListingHandler(ActionsListingMixin, RestAPINoAuthView):
+    """
+    ReST API entry point for listing public actions for application. No user
+    authentication required for the actions.
+    """
     pass
 
 
 class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
-    """ReST API entry point for listing application models and associated actions that are accessible."""
+    """
+    ReST API entry point for listing application models and associated actions.
+    """
     def _get(self, request_obj):
         args = request_obj.args
         kwargs = request_obj.kwargs
 
-        # Publicly available models (that are associated to some applications)
+        # Available models actions (that are associated to some application)
         data = ModelsCollection.serialize()
         for item in data:
             kwargs['app'] = item['app_label']
@@ -536,7 +583,7 @@ class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
             obj2 = RequestData(request_obj.request, *args, **kwargs)
             item['actions'] = ActionsSerializer(obj2).serialize()
 
-        # Publicly available apps that have app level actions
+        # Available application level actions with and without authentication
         for app in AppsCollection.serialize(get_action_response_data):
             data.append(app)
 

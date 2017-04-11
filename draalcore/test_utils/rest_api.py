@@ -20,12 +20,25 @@ logger = logging.getLogger(__name__)
 class AuthAPI(ClientConnectionUtility):
     """Auth API for testing"""
 
+    def _auth_url(self, name):
+        return reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': name})
+
     def login(self, username, password):
         data = dict(username=username, password=password)
-        return self.post(reverse('rest-api-login'), data)
+        return self.post(self._auth_url('login'), data)
+
+    def token(self, username, password):
+        data = dict(username=username, password=password)
+        return self.post(self._auth_url('token'), data)
 
     def logout(self):
-        return self.post(reverse('rest-api-logout'), {})
+        return self.post(self._auth_url('logout'), {})
+
+    def register(self, data):
+        return getattr(self, 'post')(self._auth_url('register'), data)
+
+    def activate_user(self, data):
+        return getattr(self, 'post')(self._auth_url('activate'), data)
 
 
 class FileUploadAPI(ClientConnectionUtility):
@@ -116,8 +129,16 @@ class GenericAPI(ClientConnectionUtility):
         url = reverse('rest-api-app-actions-listing', kwargs={'app': app})
         return getattr(self, 'get')(url)
 
+    def app_public_actions(self, app):
+        url = reverse('rest-api-app-public-actions-listing', kwargs={'app': app})
+        return getattr(self, 'get')(url)
+
     def app_action(self, app, action, method='get', **kwargs):
         url = reverse('rest-api-app-action', kwargs={'app': app, 'action': action})
+        return getattr(self, method.lower())(url, **kwargs)
+
+    def app_public_action(self, app, action, method='get', **kwargs):
+        url = reverse('rest-api-app-public-action', kwargs={'app': app, 'action': action})
         return getattr(self, method.lower())(url, **kwargs)
 
     def auth_request(self, name, params=None):

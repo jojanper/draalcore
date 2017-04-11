@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Authentication endpoint URLs"""
+"""3rd party authentication endpoint URLs"""
 
 # System imports
 from django.conf.urls import url
@@ -9,7 +9,7 @@ from django.conf.urls import url
 from .views import ExtAuthView, ExtAuthCallbackView
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2013,2016"
+__copyright__ = "Copyright 2013-2017"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 

@@ -15,12 +15,15 @@ class BaseAppConfig(AppConfig):
     # Display name for the API calls, this name is used to identify this app in the URL
     display_name = None
 
-    # List of public actions available for this application
+    # List of public actions (authentication required) available for this application
     actions = []
 
-    def serialize_actions(self, serializer_fn):
+    # List of public actions (no authentication required) available for this application
+    noauth_actions = []
+
+    def serialize_all_actions(self, serializer_fn):
         """
-        Serialize application level actions.
+        Serialize application level actions with and without authentication requirement.
 
         Parameters
         ----------
@@ -32,19 +35,49 @@ class BaseAppConfig(AppConfig):
         dict
            Key describes name of action and value action details.
         """
+        data = self.serialize_actions(serializer_fn, False)
+        data.update(self.serialize_actions(serializer_fn, True))
+        return data
+
+    def serialize_actions(self, serializer_fn, noauth=False):
+        """
+        Serialize application level actions.
+
+        Parameters
+        ----------
+        serializer_fn
+           Serializer implementation for action object.
+        noauth
+           True if actions requiring authentication are to be serialized, False otherwise.
+
+        Returns
+        -------
+        dict
+           Key describes name of action and value action details.
+        """
+        if noauth:
+            actions = self.noauth_actions
+            name = 'rest-api-app-public-action'
+        else:
+            actions = self.actions
+            name = 'rest-api-app-action'
+
         data = {}
-        for action in self.actions:
+        for action in actions:
             resolve_kwargs = {
                 'app': self.display_name,
                 'action': action.ACTION
             }
-            data[action.ACTION] = serializer_fn(action, 'rest-api-app-action', resolve_kwargs)
+            data[action.ACTION] = serializer_fn(action, name, resolve_kwargs)
+            data[action.ACTION].update({'authenticate': not noauth})
 
         return data
 
     def get_action_obj(self, request_obj, method):
         action = request_obj.kwargs['action']
-        for action_cls in self.actions:
+        noauth = request_obj.kwargs.get('noauth', False)
+        actions = self.noauth_actions if noauth else self.actions
+        for action_cls in actions:
             if action == action_cls.ACTION and method in action_cls.ALLOWED_METHODS:
                 return action_cls(request_obj, action_cls.MODEL)
 

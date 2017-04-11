@@ -9,7 +9,7 @@ import logging
 from copy import copy
 from django.utils import timezone
 from django.db import models, connection
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.utils.encoding import force_text
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
@@ -350,6 +350,9 @@ class ModelLogger(EventHandlingMixin, BaseDetails):
     # Fields that are tracked for model changes, by default all fields are tracked
     EVENT_TRACK_FIELDS = []
 
+    # Anonymous user is allowed to access model data
+    ANONYMOUS_ALLOWED = False
+
     class Meta:
         abstract = True
 
@@ -362,7 +365,10 @@ class ModelLogger(EventHandlingMixin, BaseDetails):
 
         super(ModelLogger, self).__init__(*args, **kwargs)
 
-        self.modified_by = editing_user if editing_user else get_current_user()
+        user = editing_user if editing_user else get_current_user()
+        if self.ANONYMOUS_ALLOWED:
+            user = user if not isinstance(user, AnonymousUser) else None
+        self.modified_by = user
 
         self._changed_fields = {}
 

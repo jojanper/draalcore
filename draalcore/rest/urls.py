@@ -17,9 +17,6 @@ urlpatterns = [
     # Access to system models and data
     url(r'^', include('draalcore.rest.rest_urls')),
 
-    # Auth API
-    url(r'^auth/', include('draalcore.rest.auth_urls')),
-
     # Enable login via Browsable API
     url(r'^browsable-auth/', include(rest_urls, namespace='rest_framework')),
 ]

@@ -13,3 +13,10 @@ class CreateNewAction(CreateAction):
 
     def _execute(self):
         return self.MODEL.objects.all()
+
+
+class CreateNew2Action(CreateAction):
+    ACTION = 'admin-public-action'
+
+    def _execute(self):
+        return 'Ok'

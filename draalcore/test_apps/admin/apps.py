@@ -10,6 +10,7 @@ class AdminConfig(BaseAppConfig):
     display_name = 'admin'
 
     def ready(self):
-        from .actions import CreateNewAction
+        from .actions import CreateNewAction, CreateNew2Action
 
         self.actions = [CreateNewAction]
+        self.noauth_actions = [CreateNew2Action]
