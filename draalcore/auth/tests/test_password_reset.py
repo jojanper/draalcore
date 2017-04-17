@@ -62,7 +62,7 @@ class PasswordResetTestCase(BaseTest):
 
         # GIVEN invalid token data
         data = {
-            'uidb64': urlsafe_base64_encode(force_bytes(self.user.pk)),
+            'uidb64': urlsafe_base64_encode(force_bytes(self.user.pk)).decode('utf-8'),
             'token': 'aaa',
             'password': 'new-password'
         }
@@ -79,7 +79,7 @@ class PasswordResetTestCase(BaseTest):
 
         # GIVEN valid data
         data = {
-            'uidb64': urlsafe_base64_encode(force_bytes(self.user.pk)),
+            'uidb64': urlsafe_base64_encode(force_bytes(self.user.pk)).decode('utf-8'),
             'token': default_token_generator.make_token(self.user),
             'password': 'new-password'
         }
