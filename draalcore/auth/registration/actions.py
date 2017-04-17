@@ -33,7 +33,7 @@ class RegisterUserAction(CreateActionWithParameters):
     def _execute(self):
         username = self.request_obj.data_params['username']
         if User.objects.filter(username=username).exists():
-            err_text = 'Username {} is already reserved, please select another'.format(username)
+            err_text = 'Username {} is already reserved, please select another name'.format(username)
             raise ModelManagerError(err_text)
 
         obj = self.MODEL.objects.register_user(**self.request_obj.data_params)
