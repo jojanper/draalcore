@@ -7,9 +7,12 @@ import datetime
 import logging
 from collections import OrderedDict
 from django.utils.timezone import utc
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import authenticate, login, logout, get_user_model
 
 # Project imports
 from draalcore.exceptions import ActionError
@@ -74,7 +77,7 @@ class TokenAction(LoginAction):
 
 class PasswordResetAction(CreateActionWithParameters):
     ACTION = 'password-reset'
-    DISPLAY_NAME = 'Reset password'
+    DISPLAY_NAME = 'Request password request'
     PARAMETERS = OrderedDict([
         ('email', (StringFieldType, NotNullable))
     ])
@@ -83,3 +86,32 @@ class PasswordResetAction(CreateActionWithParameters):
         form = PasswordResetForm(self.request_obj.data_params)
         if form.is_valid():
             form.save()
+
+
+class PasswordResetConfirmAction(CreateActionWithParameters):
+    ACTION = 'password-reset-confirm'
+    DISPLAY_NAME = 'Confirm password reset'
+    PARAMETERS = OrderedDict([
+        ('uidb64', (StringFieldType, NotNullable)),
+        ('token', (StringFieldType, NotNullable)),
+        ('password', (StringFieldType, NotNullable))
+    ])
+
+    def _execute(self):
+        UserModel = get_user_model()
+        uidb64 = self.request_obj.data_params['uidb64']
+        token = self.request_obj.data_params['token']
+
+        try:
+            # urlsafe_base64_decode() decodes to bytestring on Python 3
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = UserModel._default_manager.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            user.set_password(self.request_obj.data_params['password'])
+            user.save()
+            return
+
+        raise ActionError('Password reset unsuccessful')
