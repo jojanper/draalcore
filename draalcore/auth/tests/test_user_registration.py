@@ -72,7 +72,7 @@ class UserRegistrationTestCase(BaseTest):
 
         # THEN it should fail
         self.assertTrue(response.error)
-        error_text = 'Username {} is already reserved, please select another'.format(username)
+        error_text = 'Username {} is already reserved, please select another name'.format(username)
         self.assertEqual(response.data['errors'][0], error_text)
 
     def _test_activate_user(self, activation_key):

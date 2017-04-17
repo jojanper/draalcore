@@ -40,6 +40,12 @@ class AuthAPI(ClientConnectionUtility):
     def activate_user(self, data):
         return getattr(self, 'post')(self._auth_url('activate'), data)
 
+    def password_reset(self, data):
+        return getattr(self, 'post')(self._auth_url('password-reset'), data)
+
+    def password_reset_confirm(self, data):
+        return getattr(self, 'post')(self._auth_url('password-reset-confirm'), data)
+
 
 class FileUploadAPI(ClientConnectionUtility):
     """File upload API for testing"""
