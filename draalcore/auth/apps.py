@@ -8,10 +8,14 @@ class AuthConfig(BaseAppConfig):
 
     def ready(self):
         from .authentication.actions import (LoginAction, LogoutAction, TokenAction,
-                                             PasswordResetAction, PasswordResetConfirmAction)
+                                             PasswordResetAction, PasswordResetConfirmAction,
+                                             PasswordChangeAction)
         from .registration.actions import RegisterUserAction, ActivateUserAction
 
         # Authentication and user registration actions
         self.noauth_actions = [RegisterUserAction, ActivateUserAction,
                                LoginAction, LogoutAction, TokenAction,
                                PasswordResetAction, PasswordResetConfirmAction]
+
+        # Actions requiring authentication
+        self.actions = [PasswordChangeAction]

@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 class AuthAPI(ClientConnectionUtility):
     """Auth API for testing"""
 
-    def _auth_url(self, name):
-        return reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': name})
+    def _auth_url(self, name, base='rest-api-app-public-action'):
+        return reverse(base, kwargs={'app': 'auth', 'action': name})
 
     def login(self, username, password):
         data = dict(username=username, password=password)
@@ -45,6 +45,9 @@ class AuthAPI(ClientConnectionUtility):
 
     def password_reset_confirm(self, data):
         return getattr(self, 'post')(self._auth_url('password-reset-confirm'), data)
+
+    def password_change(self, data):
+        return getattr(self, 'post')(self._auth_url('password-change', base='rest-api-app-action'), data)
 
 
 class FileUploadAPI(ClientConnectionUtility):
