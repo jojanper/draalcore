@@ -115,3 +115,28 @@ class PasswordResetConfirmAction(CreateActionWithParameters):
             return
 
         raise ActionError('Password reset unsuccessful')
+
+
+class PasswordChangeAction(CreateActionWithParameters):
+    ACTION = 'password-change'
+    DISPLAY_NAME = 'Change password'
+    PARAMETERS = OrderedDict([
+        ('old_password', (StringFieldType, NotNullable)),
+        ('new_password1', (StringFieldType, NotNullable)),
+        ('new_password2', (StringFieldType, NotNullable))
+    ])
+
+    def _execute(self):
+        user = self.request_obj.user
+
+        if user.check_password(self.request_obj.data_params['old_password']):
+            password1 = self.request_obj.data_params['new_password1']
+            password2 = self.request_obj.data_params['new_password2']
+            if password1 != password2:
+                raise ActionError('The new passwords did not match')
+
+            user.set_password(password1)
+            user.save()
+            return
+
+        raise ActionError('Your old password was entered incorrectly. Please enter it again.')

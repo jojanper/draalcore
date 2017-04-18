@@ -73,7 +73,8 @@ class BaseTestUser(BaseTest):
             self.user.delete()
 
     def login(self):
-        return self.client.login(username=self.username, password=self.password)
+        self.signin = self.client.login(username=self.username, password=self.password)
+        return self.signin
 
     def logout(self):
         self.client.logout()
