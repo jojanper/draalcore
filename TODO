@@ -1,5 +1,6 @@
 Thoughts for further development:
 ---------------------------------
 
-- Add python 3.x support
 - Sphinx documentation
+- Move 3rd party authentication under actions API
+- Add support for parameters for actions, e.g., ext-auth/<provider> where <provider> can change
