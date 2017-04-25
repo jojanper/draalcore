@@ -78,7 +78,7 @@ class BaseAppConfig(AppConfig):
         noauth = request_obj.kwargs.get('noauth', False)
         actions = self.noauth_actions if noauth else self.actions
         for action_cls in actions:
-            if action == action_cls.ACTION and method in action_cls.ALLOWED_METHODS:
+            if action_cls.match_action(action) and method in action_cls.ALLOWED_METHODS:
                 return action_cls(request_obj, action_cls.MODEL)
 
         msg = "{} action for '{}' application using HTTP {} is not supported via the API"\

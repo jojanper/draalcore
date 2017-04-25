@@ -79,6 +79,10 @@ class BaseAction(object):
     def model_cls(self):
         return self._model_cls
 
+    @classmethod
+    def match_action(cls, action):
+        return cls.ACTION == action
+
 
 class CreateAction(BaseAction):
     """Create new model item, applicable to all models."""
@@ -318,7 +322,7 @@ class ActionMapper(object):
 
         # Now find the correct action class
         for cls_item in classes:
-            if action == cls_item.ACTION:
+            if cls_item.match_action(action):
                 return cls_item(request_obj, model_cls)
 
         raise DataParsingError('Action {} not supported for method {}'.format(action, method))
