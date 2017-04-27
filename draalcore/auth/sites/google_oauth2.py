@@ -10,10 +10,10 @@ from django.conf import settings
 from googleapiclient.discovery import build
 from oauth2client.contrib import xsrfutil
 from oauth2client.client import flow_from_clientsecrets
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
 
 # Project imports
 from .base_auth import Base3rdPartyAuth
+from draalcore.exceptions import ExtAuthError
 
 
 logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ class GoogleOAuth2(Base3rdPartyAuth):
 
         # Make sure secret token is valid
         if not xsrfutil.validate_token(settings.SECRET_KEY, base_state, 1):
-            return HttpResponseBadRequest('Invalid state in OAuth2 callback')
+            raise ExtAuthError('Invalid state in OAuth2 callback')
 
         # Exchange authorization code for Credentials object
         credential = FLOW.step2_exchange(request.GET)
@@ -88,12 +88,4 @@ class GoogleOAuth2(Base3rdPartyAuth):
 
         # Authenticate the login user
         kwargs = {'google_response': user_info}
-        self.authenticate(request, **kwargs)
-
-        # See if callback parameters include any redirect URL
-        next_state = None
-        if len(split_state) > 1:
-            next_state = base64.decodestring(split_state[1].encode())
-
-        # User logged in, go to application page
-        return HttpResponseRedirect(next_state if next_state else '/')
+        return self.authenticate(request, **kwargs)

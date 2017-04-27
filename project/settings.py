@@ -224,7 +224,7 @@ MIDDLEWARE_CLASSES = (
     # Draal middleware actions
     'draalcore.middleware.login.AutoLogout',
     'draalcore.middleware.login.LoginRequiredMiddleware',
-    'draalcore.middleware.login.UserEmailRequiredMiddleware',
+    # 'draalcore.middleware.login.UserEmailRequiredMiddleware',
     'draalcore.middleware.nginx_memcache.NginxMemcachedCookieUpdate',
     'draalcore.middleware.current_user.CurrentUserMiddleware',
     'draalcore.middleware.version.ApplicationVersionMiddleware',

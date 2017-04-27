@@ -10,14 +10,8 @@ try:
 except:
     from urllib.parse import quote_plus
 
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
-
 import oauth2 as oauth
 from django.conf import settings
-from django.http import HttpResponseRedirect
 
 # Project imports
 from .base_auth import Base3rdPartyAuth
@@ -57,7 +51,7 @@ class FacebookOAuth(Base3rdPartyAuth):
 
             # Get profile info from Facebook
             base_url = '{}?access_token={}&fields=id,first_name,last_name,email'
-            access_token = dict(urlparse.parse_qsl(content))['access_token']
+            access_token = json.loads(content)['access_token']
             request_url = base_url.format(FACEBOOK_CHECK_AUTH, access_token)
             response, content = client.request(request_url, 'GET')
             if response['status'] == '200':
@@ -66,8 +60,6 @@ class FacebookOAuth(Base3rdPartyAuth):
                 # Authenticate user
                 logger.debug(user_data)
                 kwargs = {'facebook_response': user_data}
-                self.authenticate(request, **kwargs)
+                return self.authenticate(request, **kwargs)
 
-                return HttpResponseRedirect('/')
-
-        return HttpResponseRedirect(self.get_login_page())
+        self.login_failure()

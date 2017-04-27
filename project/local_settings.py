@@ -67,3 +67,5 @@ LOCAL_TEMPLATE_LOADERS = (
 SESSION_COOKIE_NAME = 'devsessionid'
 
 SITE_URL = '{}://{}:8000'.format('http', 'localhost')
+
+EXT_AUTH_CALLBACK_URL = '{}{}'.format(SITE_URL, '/api/apps/auth/public-actions/')

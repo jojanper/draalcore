@@ -13,8 +13,6 @@ import oauth2 as oauth
 from django.conf import settings
 import requests
 from requests_oauthlib import OAuth1
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 
 # Project imports
 from .base_auth import Base3rdPartyAuth
@@ -51,7 +49,7 @@ class TwitterOAuth(Base3rdPartyAuth):
         url = request_token_url + '?' + params
         resp, content = client.request(url, "GET")
         if resp['status'] != '200':
-            return self.get_login_page()
+            self.login_failure()
 
         # Store the request token in a session for later use.
         request.session['request_token'] = dict(cgi.parse_qsl(content))
@@ -61,7 +59,7 @@ class TwitterOAuth(Base3rdPartyAuth):
 
     def authorize(self, request):
         if 'denied' in request.GET:
-            return HttpResponseRedirect(self.get_login_page())
+            self.login_failure()
 
         # Use the request token in the session to build a new client.
         token = oauth.Token(request.session['request_token']['oauth_token'],
@@ -72,7 +70,7 @@ class TwitterOAuth(Base3rdPartyAuth):
         # Request the authorized access token from Twitter.
         resp, content = client2.request(access_token_url, "GET")
         if resp['status'] != '200':
-            return HttpResponseRedirect(self.get_login_page())
+            self.login_failure()
 
         # Get user details from Twitter
         access_token = dict(cgi.parse_qsl(content))
@@ -80,12 +78,9 @@ class TwitterOAuth(Base3rdPartyAuth):
                       access_token['oauth_token'], access_token['oauth_token_secret'])
         response = requests.get(verify_credentials_url, auth=auth)
         if response.status_code != requests.codes.ok:
-            return HttpResponseRedirect(self.get_login_page())
+            self.login_failure()
 
         # Authenticate user
         logger.debug(response.json())
         kwargs = {'twitter_response': response.json()}
-        self.authenticate(request, **kwargs)
-
-        # Redirect to settings view so that user can view user details and fill-in missing data
-        return HttpResponseRedirect(reverse('settings-view'))
+        return self.authenticate(request, **kwargs)

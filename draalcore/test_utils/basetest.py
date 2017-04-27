@@ -41,6 +41,13 @@ class BaseTest(TestCase):
     def logging(self, message):
         sys.stderr.write('DEBUG: ' + str(message) + '\n')
 
+    def validate_user_response(self, data):
+        self.assertTrue('display' in data)
+        self.assertTrue('id' in data)
+        self.assertTrue('email' in data)
+        self.assertTrue('expires' in data)
+        self.assertTrue('token' in data)
+
 
 class BaseTestUser(BaseTest):
     """Base test class with user login"""

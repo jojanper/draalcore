@@ -54,7 +54,8 @@ class ExtAuthCallbackAction(AbstractModelGetAction):
 
     def execute(self):
         obj = AuthFactory.create(self.PROVIDER)
-        return obj.authorize(self.request_obj.request)
+        user = obj.authorize(self.request_obj.request)
+        return self.serialize_user(user, auth_data=True)
 
 
 class GoogleExtAuthCallbackAction(ExtAuthCallbackAction):
