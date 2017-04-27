@@ -4,18 +4,18 @@
 
 # System imports
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
+
+# Project imports
+from draalcore.exceptions import ExtAuthError
 
 
 class Base3rdPartyAuth(object):
     PROVIDER = None
 
-    def get_login_page(self):
-        return reverse('auth-login')
-
     def get_callback_url(self):
-        return '{}{}'.format(settings.SITE_URL, reverse('oauth2-callback', kwargs={'provider': self.PROVIDER}))
+        action = 'callback-{}'.format(self.PROVIDER)
+        return '{}{}'.format(settings.EXT_AUTH_CALLBACK_URL, action)
 
     def get_redirect_url(self, request):
         return request.GET.get('next', '')
@@ -24,3 +24,6 @@ class Base3rdPartyAuth(object):
         user = authenticate(**kwargs)
         login(request, user)
         return user
+
+    def login_failure(self):
+        raise ExtAuthError('Login failed, please try again')

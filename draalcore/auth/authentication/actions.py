@@ -3,21 +3,16 @@
 """User registration actions"""
 
 # System imports
-import datetime
 import logging
 from collections import OrderedDict
-from django.utils.timezone import utc
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
-from rest_framework.authtoken.models import Token
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
 # Project imports
 from draalcore.exceptions import ActionError
-from draalcore.middleware.login import AutoLogout
-from draalcore.rest.base_serializers import UserModelSerializer
 from draalcore.rest.actions import CreateActionWithParameters, CreateAction
 from draalcore.models.fields import StringFieldType, NotNullable
 
@@ -37,21 +32,9 @@ class LoginAction(CreateActionWithParameters):
         user = authenticate(**self.request_obj.data_params)
         if user:
             login(self.request_obj.request, user)
-            data = UserModelSerializer(user).data
-            data['expires'] = AutoLogout.expires()
-            data['token'] = self._get_token(user)
-            return data
+            return self.serialize_user(user, auth_data=True)
 
         raise ActionError('Invalid username and/or password')
-
-    def _get_token(self, user):
-        token, created = Token.objects.get_or_create(user=user)
-        if not created:
-            # Update the created time of the token to keep it valid
-            token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
-            token.save()
-
-        return {'token': token.key}
 
 
 class LogoutAction(CreateAction):

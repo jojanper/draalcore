@@ -151,9 +151,9 @@ class GenericAPI(ClientConnectionUtility):
         return getattr(self, method.lower())(url, **kwargs)
 
     def auth_request(self, name, params=None):
-        url = reverse('ext-auth-login', kwargs={'provider': name})
+        url = reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': 'ext-auth-{}'.format(name)})
         return getattr(self, 'get')(url + self._dict2url(params))
 
     def auth_callback(self, name, params=None):
-        url = reverse('oauth2-callback', kwargs={'provider': name})
+        url = reverse('rest-api-app-public-action', kwargs={'app': 'auth', 'action': 'callback-{}'.format(name)})
         return getattr(self, 'get')(url + self._dict2url(params))

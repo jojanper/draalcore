@@ -6,8 +6,6 @@
 import logging
 import onedrivesdk
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 
 # Project imports
 from .base_auth import Base3rdPartyAuth
@@ -43,7 +41,7 @@ class OneDriveOAuth2(Base3rdPartyAuth):
         # Abort if no authorization code available
         code = request.GET.get('code', '')
         if not code:
-            return HttpResponseRedirect(self.get_login_page())
+            self.login_failure()
 
         # Redeem the authorization code for access tokens
         try:
@@ -53,19 +51,16 @@ class OneDriveOAuth2(Base3rdPartyAuth):
             client.auth_provider.authenticate(code, self.get_callback_url(), client_secret)
         except Exception as e:
             logger.debug(e)
-            return HttpResponseRedirect(self.get_login_page())
+            self.login_failure()
 
         # Get user details
         try:
             response = onedrivesdk.DriveRequestBuilder(api_base_url + 'drive', client).get()
         except Exception as e:
             logger.debug(e)
-            return HttpResponseRedirect(self.get_login_page())
+            self.login_failure()
 
         # Authenticate user
         logger.debug(response._prop_dict)
         kwargs = {'onedrive_response': response.owner}
-        self.authenticate(request, **kwargs)
-
-        # Redirect to settings view so that user can view user details and fill-in missing data
-        return HttpResponseRedirect(reverse('settings-view'))
+        return self.authenticate(request, **kwargs)

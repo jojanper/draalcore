@@ -56,3 +56,8 @@ class ModelManagerError(RestApiException):
 class ActionError(AppException):
     """Action error."""
     pass
+
+
+class ExtAuthError(AppException):
+    """3rd party authentication error."""
+    pass

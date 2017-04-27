@@ -7,11 +7,14 @@ import sys
 import six
 import abc
 import logging
+import datetime
 import importlib
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import utc
 from django.db.models.query import QuerySet
 from django.core.urlresolvers import reverse
+from rest_framework.authtoken.models import Token
 
 # Project imports
 from .handlers import PostMixin, GetMixin, RestAPIBasicAuthView, RestAPINoAuthView
@@ -21,6 +24,8 @@ from .serializer_object import SerializerModelDataObject
 from draalcore.rest.model import ModelContainer, locate_base_module, ModelsCollection, AppsCollection
 from draalcore.exceptions import DataParsingError
 from draalcore.middleware.current_user import get_current_request
+from draalcore.rest.base_serializers import UserModelSerializer
+from draalcore.middleware.login import AutoLogout
 
 
 logger = logging.getLogger(__name__)
@@ -78,6 +83,27 @@ class BaseAction(object):
     @property
     def model_cls(self):
         return self._model_cls
+
+    @classmethod
+    def match_action(cls, action):
+        return cls.ACTION == action
+
+    def serialize_user(self, user, auth_data=False):
+        data = UserModelSerializer(user).data
+        if auth_data:
+            data['expires'] = AutoLogout.expires()
+            data.update(self._get_token(user))
+
+        return data
+
+    def _get_token(self, user):
+        token, created = Token.objects.get_or_create(user=user)
+        if not created:
+            # Update the created time of the token to keep it valid
+            token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
+            token.save()
+
+        return {'token': token.key}
 
 
 class CreateAction(BaseAction):
@@ -318,7 +344,7 @@ class ActionMapper(object):
 
         # Now find the correct action class
         for cls_item in classes:
-            if action == cls_item.ACTION:
+            if cls_item.match_action(action):
                 return cls_item(request_obj, model_cls)
 
         raise DataParsingError('Action {} not supported for method {}'.format(action, method))

@@ -3,7 +3,7 @@
 """Serializers for test models"""
 
 # Project imports
-from draalcore.rest.base_serializers import ModelSerializer
+from draalcore.rest.model_serializers import ModelSerializer
 from .models import TestModel, TestModel2, TestModel6
 from draalcore.rest.serializer_object import BaseSerializerObject
 

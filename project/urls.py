@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^$', DummyView.as_view(), name='main-view'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include('draalcore.rest.urls')),
-    url(r'^api/', include('draalcore.auth.urls')),
     url(r'^login/$', auth_views.login, {'template_name': ''}, name='auth-login'),
     url(r'^settings$', DummyView.as_view(), name='settings-view'),
 ]

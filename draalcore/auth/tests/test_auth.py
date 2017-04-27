@@ -7,7 +7,6 @@ try:
 except ImportError:
     import http.client as httplib
 from mock import patch, MagicMock
-from django.core.urlresolvers import reverse
 
 from draalcore.test_utils.rest_api import GenericAPI
 from draalcore.test_utils.basetest import BaseTestUser
@@ -71,7 +70,7 @@ class AuthGoogleTestCase(BaseTestUser):
         mock_build.userinfo.get.return_value = MagicMock()
         mock_build.userinfo.get.execute = MagicMock()
 
-        mock_auth.return_value = MagicMock()
+        mock_auth.return_value = self.user
         mock_token.return_value = True
 
         # GIVEN callback URL for OAuth2 authentication
@@ -85,10 +84,10 @@ class AuthGoogleTestCase(BaseTestUser):
         })
 
         # THEN it should succeed
-        self.assertEqual(response.status_code, httplib.FOUND)
+        self.assertTrue(response.success)
 
-        # AND redirect to correct page occurs
-        self.assertEqual(response.header['Location'], '/main')
+        # AND correct user details are returned
+        self.validate_user_response(response.data)
 
 
 class TokenClient(object):
@@ -120,14 +119,8 @@ class AuthTwitterTestCase(BaseTestUser):
         # WHEN requesting Twitter sign-in URL
         response = self.api.auth_request('twitter')
 
-        # THEN it should succeed
-        self.assertEqual(response.status_code, httplib.FOUND)
-
-        # AND URL is available
-        location = response.header['Location']
-
-        # AND it points to local site
-        self.assertEqual(reverse('auth-login'), location)
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.twitter_oauth.client')
     def test_twitter_sign_in_url(self, mock_client):
@@ -167,8 +160,8 @@ class AuthTwitterTestCase(BaseTestUser):
         # WHEN Twitter calls authentication callback
         response = self.api.auth_callback('twitter', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     def set_twitter_callback_params(self):
         session = self.client.session
@@ -189,8 +182,8 @@ class AuthTwitterTestCase(BaseTestUser):
         # WHEN requesting authorized token from Twitter
         response = self.api.auth_callback('twitter', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.twitter_oauth.requests')
     @patch('draalcore.auth.sites.twitter_oauth.oauth.Client', side_effect=TokenClient)
@@ -205,8 +198,8 @@ class AuthTwitterTestCase(BaseTestUser):
         # WHEN requesting user details from Twitter
         response = self.api.auth_callback('twitter', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.twitter_oauth.requests')
     @patch('draalcore.auth.sites.twitter_oauth.oauth.Client', side_effect=TokenClient)
@@ -224,8 +217,11 @@ class AuthTwitterTestCase(BaseTestUser):
         # WHEN requesting user details from Twitter
         response = self.api.auth_callback('twitter', params)
 
-        # THEN user is redirected back to application settings view
-        self.assertEqual(response.header['Location'], reverse('settings-view'))
+        # THEN it should succeed
+        self.assertTrue(response.success)
+
+        # AND correct user details are returned
+        self.validate_user_response(response.data)
 
 
 class TokenClientFb(object):
@@ -236,8 +232,7 @@ class TokenClientFb(object):
         self.call_count += 1
 
         if self.call_count == 0:
-            content = 'access_token=adb'
-            return dict(status='200'), content
+            return dict(status='200'), json.dumps({'access_token': 'abd'})
 
         return dict(status='200'), json.dumps({
             'id': '123',
@@ -287,8 +282,9 @@ class AuthFacebookTestCase(BaseTestUser):
         params = {'code': 'abc'}
         response = self.api.auth_callback('facebook', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
+        self.assertEqual(response.data['errors'][0], 'Login failed, please try again')
 
     @patch('draalcore.auth.sites.fb_oauth.oauth.Client', side_effect=TokenClientFb)
     def test_facebook_callback_success(self, mock_client):
@@ -300,8 +296,11 @@ class AuthFacebookTestCase(BaseTestUser):
         params = {'code': 'abc'}
         response = self.api.auth_callback('facebook', params)
 
-        # THEN user is redirected back to application settings view
-        self.assertEqual(response.header['Location'], reverse('main-view'))
+        # THEN it should succeed
+        self.assertTrue(response.success)
+
+        # AND correct user details are returned
+        self.validate_user_response(response.data)
 
 
 class OneDriveClient(object):
@@ -379,8 +378,8 @@ class AuthOneDriveTestCase(BaseTestUser):
         params = {}
         response = self.api.auth_callback('onedrive', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.onedrive_oauth2.onedrivesdk.OneDriveClient', side_effect=OneDriveClientFailure)
     def test_onedrive_callback_authorization_code_redeem_failure(self, mock_client):
@@ -388,12 +387,12 @@ class AuthOneDriveTestCase(BaseTestUser):
 
         # GIVEN failure redeem authorization code for access code
 
-        # WHEN making the request to redeem to code
+        # WHEN making the request to redeem the code
         params = {'code': '123'}
         response = self.api.auth_callback('onedrive', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.onedrive_oauth2.onedrivesdk.OneDriveClient', side_effect=OneDriveClient)
     @patch('draalcore.auth.sites.onedrive_oauth2.onedrivesdk.DriveRequestBuilder', side_effect=DriveRequestBuilderFailure)
@@ -406,8 +405,8 @@ class AuthOneDriveTestCase(BaseTestUser):
         params = {'code': '123'}
         response = self.api.auth_callback('onedrive', params)
 
-        # THEN user is redirected back to application login view
-        self.assertEqual(response.header['Location'], reverse('auth-login'))
+        # THEN it should fail
+        self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.onedrive_oauth2.onedrivesdk.OneDriveClient', side_effect=OneDriveClient)
     @patch('draalcore.auth.sites.onedrive_oauth2.onedrivesdk.DriveRequestBuilder', side_effect=DriveRequestBuilder)
@@ -420,8 +419,8 @@ class AuthOneDriveTestCase(BaseTestUser):
         params = {'code': '123'}
         response = self.api.auth_callback('onedrive', params)
 
-        # THEN is should succeed
-        self.assertTrue(response.moved_temporarily)
+        # THEN it should succeed
+        self.assertTrue(response.success)
 
-        # AND user is redirected back to application settings view
-        self.assertEqual(response.header['Location'], reverse('settings-view'))
+        # AND correct user details are returned
+        self.validate_user_response(response.data)
