@@ -8,7 +8,7 @@ except ImportError:
     import http.client as httplib
 from mock import patch, MagicMock
 
-from draalcore.test_utils.rest_api import GenericAPI
+from draalcore.test_utils.rest_api import GenericAPI, AuthAPI
 from draalcore.test_utils.basetest import BaseTestUser
 
 
@@ -57,24 +57,35 @@ class AuthGoogleTestCase(BaseTestUser):
         self.assertTrue(response.error)
 
     @patch('draalcore.auth.sites.google_oauth2.xsrfutil.validate_token')
-    @patch('draalcore.auth.sites.google_oauth2.Base3rdPartyAuth.authenticate')
     @patch('draalcore.auth.sites.google_oauth2.build')
     @patch('draalcore.auth.sites.google_oauth2.FLOW.step2_exchange')
-    def test_google_sign_in_callback(self, mock_flow_step2_exchange, mock_build, mock_auth, mock_token):
+    def test_google_sign_in_callback(self, mock_flow_step2_exchange, mock_build, mock_token):
         """OAuth2 callback is called from Google sign-in"""
 
         mock_flow_step2_exchange.return_value = MagicMock()
 
-        mock_build.return_value = MagicMock()
-        mock_build.userinfo.return_value = MagicMock()
-        mock_build.userinfo.get.return_value = MagicMock()
-        mock_build.userinfo.get.execute = MagicMock()
+        data = {
+            'id': '1234',
+            'email': 'test@tester.com2',
+            'given_name': 'test',
+            'family_name': 'tester'
+        }
 
-        mock_auth.return_value = self.user
+        exec_obj = MagicMock()
+        exec_obj.execute.return_value = data
+
+        get_obj = MagicMock()
+        get_obj.get.return_value = exec_obj
+
+        obj = MagicMock()
+        obj.userinfo.return_value = get_obj
+        mock_build.return_value = obj
+
         mock_token.return_value = True
 
         # GIVEN callback URL for OAuth2 authentication
         api = GenericAPI(self)
+        self.logout()
 
         # WHEN callback URL is called with valid data
         response = api.auth_callback('google', {
@@ -84,10 +95,12 @@ class AuthGoogleTestCase(BaseTestUser):
         })
 
         # THEN it should succeed
-        self.assertTrue(response.success)
+        self.assertTrue(response.moved_temporarily)
 
-        # AND correct user details are returned
+        # AND correct user details are available
+        response = AuthAPI(self).user_details()
         self.validate_user_response(response.data)
+        self.assertEqual(response.data['email'], data['email'])
 
 
 class TokenClient(object):
@@ -206,6 +219,7 @@ class AuthTwitterTestCase(BaseTestUser):
     def test_twitter_callback_success(self, mock_client, mock_requests):
         """Callback URL for Twitter login is called"""
 
+        self.logout()
         params = self.set_twitter_callback_params()
 
         # GIVEN retrieval of user details from Twitter
@@ -218,9 +232,10 @@ class AuthTwitterTestCase(BaseTestUser):
         response = self.api.auth_callback('twitter', params)
 
         # THEN it should succeed
-        self.assertTrue(response.success)
+        self.assertTrue(response.moved_temporarily)
 
         # AND correct user details are returned
+        response = AuthAPI(self).user_details()
         self.validate_user_response(response.data)
 
 
@@ -238,7 +253,7 @@ class TokenClientFb(object):
             'id': '123',
             'first_name': 'test',
             'last_name': 'test',
-            'email': 'test@test.com'
+            'email': 'test@test.fbcom'
         })
 
 
@@ -291,16 +306,19 @@ class AuthFacebookTestCase(BaseTestUser):
         """Callback URL for Facebook login is called"""
 
         # GIVEN retrieval of user details from Facebook succeeds
+        self.logout()
 
         # WHEN requesting user details from Facebook
         params = {'code': 'abc'}
         response = self.api.auth_callback('facebook', params)
 
         # THEN it should succeed
-        self.assertTrue(response.success)
+        self.assertTrue(response.moved_temporarily)
 
         # AND correct user details are returned
+        response = AuthAPI(self).user_details()
         self.validate_user_response(response.data)
+        self.assertEqual(response.data['email'], 'test@test.fbcom')
 
 
 class OneDriveClient(object):
@@ -413,6 +431,8 @@ class AuthOneDriveTestCase(BaseTestUser):
     def test_onedrive_auth_success(self, mock_request, mock_client):
         """User authenticates via Drive API"""
 
+        self.logout()
+
         # GIVEN OneDrive API for 3rd party authentication
 
         # WHEN authenticating via Drive API
@@ -420,7 +440,8 @@ class AuthOneDriveTestCase(BaseTestUser):
         response = self.api.auth_callback('onedrive', params)
 
         # THEN it should succeed
-        self.assertTrue(response.success)
+        self.assertTrue(response.moved_temporarily)
 
         # AND correct user details are returned
+        response = AuthAPI(self).user_details()
         self.validate_user_response(response.data)

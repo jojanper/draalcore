@@ -49,6 +49,9 @@ class AuthAPI(ClientConnectionUtility):
     def password_change(self, data):
         return getattr(self, 'post')(self._auth_url('password-change', base='rest-api-app-action'), data)
 
+    def user_details(self):
+        return getattr(self, 'get')(self._auth_url('auth-user-details', base='rest-api-app-action'))
+
 
 class FileUploadAPI(ClientConnectionUtility):
     """File upload API for testing"""
