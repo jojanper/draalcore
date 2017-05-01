@@ -4,6 +4,7 @@
 
 # System imports
 import logging
+from django.conf import settings
 from django.http import HttpResponseRedirect
 
 # Project imports
@@ -54,8 +55,8 @@ class ExtAuthCallbackAction(AbstractModelGetAction):
 
     def execute(self):
         obj = AuthFactory.create(self.PROVIDER)
-        user = obj.authorize(self.request_obj.request)
-        return self.serialize_user(user, auth_data=True)
+        obj.authorize(self.request_obj.request)
+        return HttpResponseRedirect(settings.EXT_AUTH_CALLBACK_RETURN_URL.format(self.PROVIDER))
 
 
 class GoogleExtAuthCallbackAction(ExtAuthCallbackAction):

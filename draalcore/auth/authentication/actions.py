@@ -13,7 +13,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 
 # Project imports
 from draalcore.exceptions import ActionError
-from draalcore.rest.actions import CreateActionWithParameters, CreateAction
+from draalcore.rest.actions import CreateActionWithParameters, CreateAction, AbstractModelGetAction
 from draalcore.models.fields import StringFieldType, NotNullable
 
 
@@ -123,3 +123,11 @@ class PasswordChangeAction(CreateActionWithParameters):
             return
 
         raise ActionError('Your old password was entered incorrectly. Please enter it again.')
+
+
+class AuthUserDetailsAction(AbstractModelGetAction):
+    ACTION = 'auth-user-details'
+    DISPLAY_NAME = 'User details'
+
+    def execute(self):
+        return self.serialize_user(self.request_obj.request.user, auth_data=True)

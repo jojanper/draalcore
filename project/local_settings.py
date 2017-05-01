@@ -68,4 +68,8 @@ SESSION_COOKIE_NAME = 'devsessionid'
 
 SITE_URL = '{}://{}:8000'.format('http', 'localhost')
 
+# Callback URL for 3rd party authentication
 EXT_AUTH_CALLBACK_URL = '{}{}'.format(SITE_URL, '/api/apps/auth/public-actions/')
+
+# Redirect URL from callback URL
+EXT_AUTH_CALLBACK_RETURN_URL = '/api/apps'

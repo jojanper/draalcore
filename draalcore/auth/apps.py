@@ -14,7 +14,7 @@ class AuthConfig(BaseAppConfig):
 
         from .authentication.actions import (LoginAction, LogoutAction, TokenAction,
                                              PasswordResetAction, PasswordResetConfirmAction,
-                                             PasswordChangeAction)
+                                             PasswordChangeAction, AuthUserDetailsAction)
         from .registration.actions import RegisterUserAction, ActivateUserAction
 
         # Authentication and user registration actions
@@ -27,4 +27,4 @@ class AuthConfig(BaseAppConfig):
                                TwitterExtAuthCallbackAction, OneDriveExtAuthCallbackAction]
 
         # Actions requiring authentication
-        self.actions = [PasswordChangeAction]
+        self.actions = [PasswordChangeAction, AuthUserDetailsAction]
