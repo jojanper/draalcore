@@ -11,6 +11,7 @@ install:
     # Install the desired version of Node
     - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
     - npm install
+    - pip install -U pip
     - npm run prepare
 script:
     - npm run cibuild
