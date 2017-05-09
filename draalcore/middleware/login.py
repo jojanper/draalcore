@@ -6,7 +6,7 @@
 import logging
 from re import compile
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from datetime import datetime, timedelta
 from django.contrib import auth
@@ -45,7 +45,8 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated():
             path = request.path_info.lstrip('/')
             if not any(m.search(path) for m in EXEMPT_URLS):
-                return HttpResponseRedirect(settings.LOGIN_URL + '?next=' + request.path)
+                msg = 'Unauthorized, please login at {}'.format(settings.LOGIN_URL)
+                return HttpResponse(msg, status=401)
 
 
 class UserEmailRequiredMiddleware:
@@ -96,7 +97,8 @@ class AutoLogout:
             if cur_time - last_touch > timedelta(0, DELAY, 0):
                 auth.logout(request)
                 del request.session['last_touch']
-                return HttpResponseRedirect(settings.LOGIN_URL + '?next=' + request.path)
+                msg = 'Session timeout, please login at {}'.format(settings.LOGIN_URL)
+                return HttpResponse(msg, status=401)
         except KeyError:
             pass
 

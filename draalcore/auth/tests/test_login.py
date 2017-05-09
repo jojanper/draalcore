@@ -49,7 +49,7 @@ class AuthAPITestCase(BaseTestUser):
 
         # AND access to authenticated APIs is denied
         response = self.api.root_api()
-        self.assertTrue(response.moved_temporarily)
+        self.assertTrue(response.unauthorized)
 
     def test_token(self):
         """User retrieves authentication token"""
