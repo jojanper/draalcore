@@ -38,7 +38,7 @@ class LoginRequiredTestCase(BaseTest):
 
         # THEN redirect response should returned
         self.assertIsNotNone(response)
-        self.assertTrue('/login/?next=' in response['Location'])
+        self.assertEqual(response.status_code, 401)
 
 
 class UserEmailRequiredTestCase(BaseTest):
@@ -113,5 +113,6 @@ class AutoLogoutTestCase(BaseTest):
         # WHEN request is processed by the auto logout middleware
         response = obj.process_request(request)
 
-        # THEN redirect response is returned
+        # THEN unauthorized response is returned
         self.assertIsNotNone(response)
+        self.assertEqual(response.status_code, 401)

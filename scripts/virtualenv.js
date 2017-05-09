@@ -18,6 +18,7 @@ commands = [
     format('virtualenv -p %s --no-site-packages %s', python, folder),
     'cd ..',
     format('. ./%s/%s/bin/activate', virtualFolder, folder),
+    'pip install -U pip setuptools',
     'npm run prepare'
 ];
 
