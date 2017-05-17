@@ -45,8 +45,7 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated():
             path = request.path_info.lstrip('/')
             if not any(m.search(path) for m in EXEMPT_URLS):
-                msg = 'Unauthorized, please login at {}'.format(settings.LOGIN_URL)
-                return HttpResponse(msg, status=401)
+                return HttpResponse('Unauthorized, please login', status=401)
 
 
 class UserEmailRequiredMiddleware:
@@ -97,8 +96,7 @@ class AutoLogout:
             if cur_time - last_touch > timedelta(0, DELAY, 0):
                 auth.logout(request)
                 del request.session['last_touch']
-                msg = 'Session timeout, please login at {}'.format(settings.LOGIN_URL)
-                return HttpResponse(msg, status=401)
+                return HttpResponse('Session timeout, please login', status=401)
         except KeyError:
             pass
 

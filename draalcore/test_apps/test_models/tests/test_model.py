@@ -265,6 +265,21 @@ class BaseModelTestCase(TestModelMixin, BaseTestUser):
         self.assertEqual(data[0]['model'], None)
         self.assertEqual(len(data[0]['actions'].keys()), 2)
 
+    def test_root_public_api(self):
+        """Available public ReST API."""
+
+        # GIVEN public API
+        # WHEN fetching available applications and models
+        response = self.api.root_api(public=True)
+
+        # THEN it should succeed
+        self.assertTrue(response.success)
+
+        # AND it should have valid data
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['app_label'], 'auth')
+        self.assertEqual(response.data[1]['app_label'], 'admin')
+
     def test_repr(self):
         """Test model objects must have printable representation"""
         self.assertTrue(repr(self.obj1))

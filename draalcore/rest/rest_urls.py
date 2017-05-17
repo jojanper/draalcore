@@ -16,12 +16,8 @@ from draalcore.rest.actions import (ModelActionHandler,
                                     ActionsListingHandler,
                                     AppPublicActionHandler,
                                     ActionsPublicListingHandler,
-                                    SystemAppsModelsListingHandler)
-
-__author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2015-2016"
-__email__ = "juha.ojanpera@gmail.com"
-__status__ = "Development"
+                                    SystemAppsPublicListingHandler,
+                                    SystemAppsListingHandler)
 
 
 prefix = getattr(settings, 'DRAALCORE_REST_SYSTEM_BASE_PREFIX', 'apps')
@@ -81,7 +77,11 @@ urlpatterns = [
         BaseSerializerHandler.as_view(),
         name='rest-api-model'),
 
+    url(r'{}/public$'.format(prefix),
+        SystemAppsPublicListingHandler.as_view(),
+        name='rest-api-public'),
+
     url(r'{}$'.format(prefix),
-        SystemAppsModelsListingHandler.as_view(),
+        SystemAppsListingHandler.as_view(),
         name='rest-api'),
 ]

@@ -133,8 +133,8 @@ class GenericAPI(ClientConnectionUtility):
         url = reverse('rest-api-model-meta', kwargs={'app': app, 'model': model})
         return getattr(self, 'get')(url + self._dict2url(params))
 
-    def root_api(self):
-        url = reverse('rest-api')
+    def root_api(self, public=False):
+        url = reverse('rest-api' if not public else 'rest-api-public')
         return getattr(self, 'get')(url)
 
     def app_actions(self, app):

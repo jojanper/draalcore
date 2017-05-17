@@ -2,3 +2,5 @@ Thoughts for further development:
 ---------------------------------
 
 - Sphinx documentation
+- Celery tasks?
+- Docker?
