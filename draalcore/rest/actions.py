@@ -593,7 +593,7 @@ class ActionsPublicListingHandler(ActionsListingMixin, RestAPINoAuthView):
     pass
 
 
-class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
+class SystemAppsListingHandler(GetMixin, RestAPIBasicAuthView):
     """
     ReST API entry point for listing application models and associated actions.
     """
@@ -618,6 +618,26 @@ class SystemAppsModelsListingHandler(GetMixin, RestAPIBasicAuthView):
             for item in settings.UI_APPLICATION_MODELS:
                 for app, _models in six.iteritems(item):
                     for model in _models:
-                        data.append({'app_label': app, 'model': model['name'], 'actions': []})
+                        data.append({'app_label': app, 'model': model['name'], 'actions': {}})
 
         return ResponseData(data)
+
+
+class SystemAppsPublicListingHandler(RestAPINoAuthView, SystemAppsListingHandler):
+    """
+    ReST API entry point for listing public APIs.
+    """
+    def _get(self, request_obj):
+        public_data = []
+        for item in super(SystemAppsPublicListingHandler, self)._get(request_obj).data:
+            public_item = item.copy()
+            public_item['actions'] = {}
+            for action, action_data in six.iteritems(item['actions']):
+                # Include only public actions
+                if not action_data.get('authenticate', True):
+                    public_item['actions'][action] = action_data
+
+            if public_item['actions']:
+                public_data.append(public_item)
+
+        return ResponseData(public_data)
