@@ -75,7 +75,7 @@ class BaseModelAdminTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.success)
 
         # AND event message should be visible
-        self.assertEqual(response.data[0]['events'], 'Changed name and duration.')
+        self.assertEqual(response.data[0]['events'], [{u'changed': {u'fields': [u'name', u'duration']}}])
 
         # ----------
 
