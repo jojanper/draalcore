@@ -12,15 +12,15 @@ with open('package.json') as json_data:
     APP_VERSION = json.load(json_data)['version']
 
 install_requires = [
-    'django>=1.9,<1.10',
-    'djangorestframework==3.6.3',
+    'django>=1.9,<2.0',
+    'djangorestframework==3.7.7',
     'six>=1.10.0,<2dev',
     'celery>=3.1.23,<4dev',
-    'httplib2>=0.9.2,<1dev',
-    'google-api-python-client==1.5.5',
+    'httplib2>=0.10.3,<1dev',
+    'google-api-python-client==1.6.5',
     'oauth2',
     'requests-oauthlib==0.7.0',
-    'onedrivesdk==1.1.1',
+    'onedrivesdk==1.1.8',
 ]
 
 setup(
