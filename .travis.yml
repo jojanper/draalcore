@@ -3,8 +3,9 @@ python:
     - 2.7
     - 3.4
     - 3.5
+    - 3.6
 env:
-  - TRAVIS_NODE_VERSION="6"
+  - TRAVIS_NODE_VERSION="8"
 install:
     # Clear out whatever version of NVM Travis has.
     # Grab NVM and Checkout the latest stable tag.
@@ -12,7 +13,7 @@ install:
     - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
     - npm install
     - pip install -U pip setuptools
-    - npm run prepare
+    - npm run install-pytools
 script:
     - npm run cibuild
     - npm run build
