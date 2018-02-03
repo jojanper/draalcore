@@ -270,11 +270,6 @@ class VisorMiddleware(object):
 
 PROFILE_LOG_BASE = os.path.dirname(os.path.abspath(__file__))
 
-try:
-    PROFILE_LOG_BASE = PROFILE_LOG_BASE
-except:
-    PROFILE_LOG_BASE = "/tmp"
-
 
 def profile(log_file):
     """Profile some callable.

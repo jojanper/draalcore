@@ -19,7 +19,7 @@ commands = [
     'cd ..',
     format('. ./%s/%s/bin/activate', virtualFolder, folder),
     'pip install -U pip setuptools',
-    'npm run prepare'
+    'npm run install-pytools'
 ];
 
 shelljs.exec(commands.join(' && '), function(code, stdout, stderr) {

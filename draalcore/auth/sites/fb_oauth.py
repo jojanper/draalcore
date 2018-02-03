@@ -7,7 +7,7 @@ import json
 import logging
 try:
     from urllib import quote_plus
-except:
+except ImportError:
     from urllib.parse import quote_plus
 
 import oauth2 as oauth
