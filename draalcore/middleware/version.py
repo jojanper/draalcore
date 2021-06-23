@@ -6,8 +6,11 @@
 from django.http import HttpResponse
 from django.conf import settings
 
+# Project imports
+from draalcore.middleware.base import BaseMiddleware
+
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2015"
+__copyright__ = "Copyright 2015,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -16,7 +19,7 @@ __status__ = "Development"
 VERSION_COOKIE_NAME = getattr(settings, 'APP_VERSION_COOKIE_NAME', 'app-version')
 
 
-class ApplicationVersionMiddleware:
+class ApplicationVersionMiddleware(BaseMiddleware):
     """
     Middleware that checks the web clients requesting data from server are using compatible
     application code. If not, HTTP 418 status code is returned to indicate that the client code

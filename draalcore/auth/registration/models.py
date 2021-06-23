@@ -84,7 +84,8 @@ class UserAccountProfile(ModelLogger):
         (ACCOUNT_EXPIRED, ACCOUNT_EXPIRED),
     )
 
-    user = models.OneToOneField(User, help_text='User', related_name='account_profiles')
+    user = models.OneToOneField(User, help_text='User', on_delete=models.CASCADE,
+                                related_name='account_profiles')
     activation_key = models.CharField(max_length=40, help_text='Account activation key')
     account_status = models.CharField(max_length=24, choices=ACCOUNT_CHOICES,
                                       default=ACCOUNT_ACTIVE, help_text='Account status')

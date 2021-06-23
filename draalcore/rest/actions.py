@@ -13,7 +13,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import utc
 from django.db.models.query import QuerySet
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework.authtoken.models import Token
 
 # Project imports

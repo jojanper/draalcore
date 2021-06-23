@@ -3,36 +3,31 @@
 """Authentication backends."""
 
 # System imports
+import logging
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.contrib.auth.backends import BaseBackend
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2013-2016"
+__copyright__ = "Copyright 2013-2016, 2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
-
-def get_user(user_details):
-    try:
-        user = User.objects.get(username=user_details['username'])
-        user.first_name = user_details['first_name']
-        user.last_name = user_details['last_name']
-        user.password = settings.SOCIAL_AUTH_USER_PASSWORD
-        user.save()
-    except User.DoesNotExist:
-        user = User.objects.create_user(username=user_details['username'],
-                                        email=user_details['email'],
-                                        password=settings.SOCIAL_AUTH_USER_PASSWORD,
-                                        first_name=user_details['first_name'],
-                                        last_name=user_details['last_name'])
-
-    return user
+logger = logging.getLogger(__name__)
 
 
-class BaseAuthBackend(object):
+class BaseAuthBackend(BaseBackend):
     """
-    Base class for authentication.
+    Base class for custom authentication.
     """
+
+    def authenticate(self, request, username=None, password=None):
+        # As Django goes through all authentication backends, limit backend usage
+        # only to social authentication
+        customBackend = request.META.get('IS_SOCIAL', False) if request else False
+        if not customBackend:
+            return None
+
+        return User.objects.get(username=username)
 
     def get_user(self, user_id):
         try:
@@ -46,27 +41,11 @@ class GoogleOAuth2Backend(BaseAuthBackend):
     Authenticate user based on Google OAuth2 authentication information.
     """
 
-    def authenticate(self, google_response):
-        return get_user({
-            'username': 'google-{}'.format(google_response['id']),
-            'email': google_response['email'],
-            'first_name': google_response['given_name'],
-            'last_name': google_response['family_name'],
-        })
-
 
 class TwitterOAuthBackend(BaseAuthBackend):
     """
     Authenticate user based on Twitter authentication information.
     """
-
-    def authenticate(self, twitter_response):
-        return get_user({
-            'username': 'twitter-{}'.format(twitter_response['id']),
-            'email': '',
-            'first_name': twitter_response['name'],
-            'last_name': '',
-        })
 
 
 class FacebookOAuthBackend(BaseAuthBackend):
@@ -74,24 +53,8 @@ class FacebookOAuthBackend(BaseAuthBackend):
     Authenticate user based on Facebook authentication information.
     """
 
-    def authenticate(self, facebook_response):
-        return get_user({
-            'username': 'fb-{}'.format(facebook_response['id']),
-            'email': facebook_response['email'],
-            'first_name': facebook_response['first_name'],
-            'last_name': facebook_response['last_name'],
-        })
-
 
 class OneDriveOAuth2Backend(BaseAuthBackend):
     """
     Authenticate user based on OneDrive authentication information.
     """
-
-    def authenticate(self, onedrive_response):
-        return get_user({
-            'username': 'od-{}'.format(onedrive_response.user.id),
-            'email': '',
-            'first_name': onedrive_response.user.display_name,
-            'last_name': '',
-        })

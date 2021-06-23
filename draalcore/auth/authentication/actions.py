@@ -5,6 +5,7 @@
 # System imports
 import logging
 from collections import OrderedDict
+from django.conf import settings
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.forms import PasswordResetForm
@@ -16,6 +17,7 @@ from draalcore.exceptions import ActionError
 from draalcore.rest.actions import CreateActionWithParameters, CreateAction, AbstractModelGetAction
 from draalcore.models.fields import StringFieldType, NotNullable
 
+DEFAULT_BACKEND = settings.AUTHENTICATION_BACKENDS[0]
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +31,9 @@ class LoginAction(CreateActionWithParameters):
     ])
 
     def _execute(self):
-        user = authenticate(**self.request_obj.data_params)
+        user = authenticate(self.request_obj.request, **self.request_obj.data_params)
         if user:
-            login(self.request_obj.request, user)
+            login(self.request_obj.request, user, backend=DEFAULT_BACKEND)
             return self.serialize_user(user, auth_data=True)
 
         raise ActionError('Invalid username and/or password')
@@ -51,7 +53,7 @@ class TokenAction(LoginAction):
     DISPLAY_NAME = 'Get authentication token'
 
     def _execute(self):
-        user = authenticate(**self.request_obj.data_params)
+        user = authenticate(self.request_obj.request, **self.request_obj.data_params)
         if user:
             return self._get_token(user)
 

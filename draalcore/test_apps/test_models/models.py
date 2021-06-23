@@ -11,7 +11,7 @@ from draalcore.models.fields import (AppModelCharField, AppModelForeignKey, AppM
                                      AppModelTextField, AppModelForeignObjectKey)
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014"
+__copyright__ = "Copyright 2014,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -70,15 +70,17 @@ class TestModel2(ModelLogger):
         'name': 'name'
     }
 
-    name = AppModelCharField(mandatory=True, max_length=256, blank=True, null=True)
+    name = AppModelCharField(mandatory=True, max_length=256, blank=True, null=True,
+                             verbose_name='Name')
     comments = AppModelCharField(optional=True, max_length=256, blank=True, null=True)
     free_text = AppModelTextField(optional=True, blank=True, null=True, read_only=True)
-    model1 = AppModelForeignKey(TestModel, mandatory=True, related_name="model1")
-    model2 = AppModelForeignKey(TestModel, optional=True, blank=True, null=True, related_name="model2")
-    model3 = AppModelManyToManyField(TestModel, optional=True, blank=True, null=True, related_name="model3")
+    model1 = AppModelForeignKey(TestModel, mandatory=True, related_name="model1", on_delete=models.CASCADE)
+    model2 = AppModelForeignKey(TestModel, optional=True, blank=True, null=True, related_name="model2", on_delete=models.CASCADE)
+    model3 = AppModelManyToManyField(TestModel, optional=True, blank=True, related_name="model3")
     meta = AppModelForeignObjectKey(TestModel, optional=True, null=True, blank=True,
-                                    help_text='Metadata information', label='Meta data')
-    duration = models.FloatField(default=-1, blank=True, null=True)
+                                    help_text='Metadata information', label='Meta data',
+                                    on_delete=models.CASCADE)
+    duration = models.FloatField(default=-1, blank=True, null=True, verbose_name='Test duration')
 
     objects = TestModel2Manager()
 

@@ -43,6 +43,7 @@ class GoogleOAuth2(Base3rdPartyAuth):
     """
 
     PROVIDER = 'google'
+    BACKEND = 'draalcore.auth.backend.GoogleOAuth2Backend'
 
     def get_authorize_url(self, request):
         """Request and prepare URL for login using Google account."""
@@ -60,6 +61,14 @@ class GoogleOAuth2(Base3rdPartyAuth):
 
         # And off to Google account login page
         return FLOW.step1_get_authorize_url()
+
+    def set_user(self, response):
+        return self.get_user({
+            'username': 'google-{}'.format(response['id']),
+            'email': response['email'],
+            'first_name': response['given_name'],
+            'last_name': response['family_name'],
+        })
 
     def authorize(self, request):
         """User successfully authenticated in Google's account site, now login the user locally."""
@@ -87,5 +96,5 @@ class GoogleOAuth2(Base3rdPartyAuth):
         credential.revoke(httplib2.Http())
 
         # Authenticate the login user
-        kwargs = {'google_response': user_info}
-        return self.authenticate(request, **kwargs)
+        user = self.set_user(user_info)
+        return self.authenticate(request, user.username)

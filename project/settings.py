@@ -8,7 +8,7 @@ import json
 import logging.config
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2013-2016"
+__copyright__ = "Copyright 2013-2016,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -39,6 +39,9 @@ ADMINS = (
 PRODUCTION_ENVIRONMENT = False
 
 MANAGERS = ADMINS
+
+# Default primary key field type to use for models that don’t have a field with primary_key=True
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 #
 # Subject-line prefix for email messages sent with django.core.mail.mail_admins or
@@ -150,6 +153,14 @@ USER_EMAIL_REDIRECT = 'settings-view'
 # Auto logout delay in seconds
 AUTO_LOGOUT_DELAY = 60 * 60  # equivalent to 60 minutes
 
+# Django REST framework default rendering
+# Comment Browsable API for production setup
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+}
 
 #
 # Django Nginx Memcache settings
@@ -212,7 +223,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'mctqf=#a+#o3h4w&amp;v5hol510+w@u_(mkm-+j=cxkd@r2_^v2&amp;8'
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -225,8 +236,8 @@ MIDDLEWARE_CLASSES = (
     'draalcore.middleware.login.AutoLogout',
     'draalcore.middleware.login.LoginRequiredMiddleware',
     # 'draalcore.middleware.login.UserEmailRequiredMiddleware',
-    'draalcore.middleware.nginx_memcache.NginxMemcachedCookieUpdate',
-    'draalcore.middleware.current_user.CurrentUserMiddleware',
+    # 'draalcore.middleware.nginx_memcache.NginxMemcachedCookieUpdate',
+    # 'draalcore.middleware.current_user.CurrentUserMiddleware',
     'draalcore.middleware.version.ApplicationVersionMiddleware',
 )
 
@@ -263,7 +274,8 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request'
             ],
             'debug': DEBUG,
 
@@ -303,7 +315,7 @@ INSTALLED_APPS = (
     'draalcore.models',
     'draalcore.rest',
     'draalcore.test_apps.test_models',
-    'draalcore.test_apps.admin'
+    'draalcore.test_apps.admin',
 )
 
 #
@@ -331,12 +343,24 @@ LOGGING = {
             'formatter': 'verbose'
         }
     },
+    'loggers': {
+        'draalcore': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'formatter': 'verbose'
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'formatter': 'verbose'
+        }
+    },
     # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-        'formatter': 'verbose'
-    }
+    # 'root': {
+    #    'handlers': ['console'],
+    #    'level': 'DEBUG',
+    #    'formatter': 'verbose'
+    # }
 }
 
 logging.config.dictConfig(LOGGING)

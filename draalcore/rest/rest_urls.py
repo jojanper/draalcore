@@ -21,7 +21,7 @@ from draalcore.rest.actions import (ModelActionHandler,
 
 
 prefix = getattr(settings, 'DRAALCORE_REST_SYSTEM_BASE_PREFIX', 'apps')
-app_prefix = '{}/(?P<app>[A-Za-z0-9\-_]+)'.format(prefix)
+app_prefix = '{}/(?P<app>[A-Za-z0-9\\-_]+)'.format(prefix)
 model_prefix = '{}/(?P<model>[A-Za-z0-9]+)'.format(app_prefix)
 
 

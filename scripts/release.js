@@ -1,14 +1,12 @@
 /**
  * Library release script.
- *
- * @module scripts/release.
  */
 
-const shelljs = require('shelljs');
 const options = require('minimist')(process.argv.slice(1));
 const logger = require('log-symbols');
 const format = require('util').format;
 
+const { execute } = require('./utils');
 
 if (!options.version) {
     console.log(logger.error, 'No --version=<major.minor.patch> option defined!');
@@ -47,6 +45,4 @@ for (let remote of remotes) {
     cmds.push(format('git push %s master', remote));
 }
 
-shelljs.exec(cmds.join(' && '), function(code) {
-    process.exit(code);
-});
+execute(cmds.join(' && ')).then(process.exit).catch(process.exit);

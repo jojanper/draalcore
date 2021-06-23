@@ -5,14 +5,17 @@
 # System imports
 import logging
 from re import compile
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from datetime import datetime, timedelta
 from django.contrib import auth
 
+# Project imports
+from draalcore.middleware.base import BaseMiddleware
+
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2013-2016"
+__copyright__ = "Copyright 2013-2016,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -25,13 +28,13 @@ if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
     EXEMPT_URLS += [compile(expr) for expr in settings.LOGIN_EXEMPT_URLS]
 
 login_error_text = "The Login Required middleware requires authentication middleware " \
-                   "to be installed. Edit your MIDDLEWARE_CLASSES settings to insert " \
+                   "to be installed. Edit your MIDDLEWARE settings to insert " \
                    "'django.contrib.auth.middleware.AuthenticationMiddleware'. If that doesn't " \
                    "work, ensure your TEMPLATE_CONTEXT_PROCESSORS setting includes " \
                    "'django.template.context_processors.auth'."
 
 
-class LoginRequiredMiddleware:
+class LoginRequiredMiddleware(BaseMiddleware):
     """
     Middleware that requires a user to be authenticated to view any page other
     than LOGIN_URL. Exemptions to this requirement can optionally be specified
@@ -42,19 +45,19 @@ class LoginRequiredMiddleware:
     """
     def process_request(self, request):
         assert hasattr(request, 'user'), login_error_text
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             path = request.path_info.lstrip('/')
             if not any(m.search(path) for m in EXEMPT_URLS):
                 return HttpResponse('Unauthorized, please login', status=401)
 
 
-class UserEmailRequiredMiddleware:
+class UserEmailRequiredMiddleware(BaseMiddleware):
     """
     Middleware that requires a user to have email assigned. If email is not present, user is
     redirected to URL as indicated by settings.USER_EMAIL_REDIRECT.
     """
     def process_request(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             if not request.user.email:
                 path = request.path_info
                 view_url = reverse(settings.USER_EMAIL_REDIRECT)
@@ -79,13 +82,13 @@ class DateTimeSerializer(object):
         return str(self._item)
 
 
-class AutoLogout:
+class AutoLogout(BaseMiddleware):
     """
     Middleware for logging out user if session has expired
     """
     def process_request(self, request):
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             # Can't log out if not logged in
             return
 

@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/jojanper/draalcore.svg?branch=master)](https://travis-ci.org/jojanper/draalcore)
-
 # draalcore
 > Utility library (Django based) for backend application development.
 
@@ -9,15 +7,15 @@
 ```
 npm install
 npm run setup
-source virtualenv2.7/draalcore/bin/activate
+source virtualenv3.6/draalcore/bin/activate
 ```
 
 This installs NPM, virtualenv and library (both npm and python) dependencies. Default python version
-is 2.7. To install other python versions under virtualenv:
+is 3.6. To install other python versions under virtualenv:
 
 ```
-npm run setup -- --virtualname=virtualenv3.4 --python=/usr/bin/python3.4
-source virtualenv3.4/draalcore/bin/activate
+npm run setup -- --virtualname=virtualenv3.8 --python=/usr/bin/python3.8
+source virtualenv3.8/draalcore/bin/activate
 ```
 
 ### Run Python code styling
@@ -29,6 +27,7 @@ npm run lint
 ```
 npm test (using django-nose test runner)
 npm test -- --djangorunner=true (using django's own test runner, faster)
+npm test -- --testapp=draalcore.test_apps.test_models.tests.test_actions:ModelActionsTestCase.test_model_actions_listing (run specific test case)
 ```
 
 ### Run code styling + unit tests
@@ -64,5 +63,5 @@ Django based library with ReST API and related functionality to simplify actual 
 
 ### Continuous Integration (CI)
 
-#### Travis CI
-https://travis-ci.org/jojanper/draalcore
+#### GitHub Actions
+https://github.com/jojanper/draalcore/actions

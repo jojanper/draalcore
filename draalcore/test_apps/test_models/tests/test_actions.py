@@ -9,7 +9,7 @@ import importlib
 from mock import patch
 
 # Project imports
-from ..models import TestModel
+from draalcore.test_apps.test_models.models import TestModel
 from ..actions import CreateNewAction
 from .utils.mixins import TestModelMixin
 from draalcore.test_utils.basetest import BaseTest, BaseTestUser

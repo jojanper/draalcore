@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.db import models, connection
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils.encoding import force_text
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.admin.models import ADDITION, LogEntry
 
@@ -21,7 +21,7 @@ from draalcore.middleware.current_user import get_current_user
 from draalcore.models.fields import AppModelFieldParser, AppModelCharField
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014-2016"
+__copyright__ = "Copyright 2014-2016,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -270,7 +270,9 @@ class BaseDetails(BaseModel):
     last_modified = models.DateTimeField(auto_now_add=True, help_text='Latest modification timestamp.')
 
     # Who modified the data last
-    modified_by = models.ForeignKey(User, blank=True, null=True, editable=False, help_text='User who modified the data.')
+    modified_by = models.ForeignKey(User, blank=True, null=True, editable=False,
+                                    on_delete=models.CASCADE,
+                                    help_text='User who modified the data.')
 
     # Admin will use this as manager
     admin_objects = models.Manager()

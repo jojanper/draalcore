@@ -8,7 +8,7 @@ import inspect
 import logging
 import importlib
 from django.apps import apps
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # Project imports
 from draalcore.exceptions import (ModelNotFoundError, ModelAccessDeniedError, ModelSerializerNotDefinedError,

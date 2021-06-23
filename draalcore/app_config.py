@@ -9,10 +9,16 @@ from draalcore.exceptions import ActionError
 class BaseAppConfig(AppConfig):
     """Base application configuration"""
 
+    # Django to select a configuration class automatically.
+    # App config using this should enable this.
+    default = False
+
     # Application is public, that is, exposed to API to some extent
     public_app = True
 
-    # Display name for the API calls, this name is used to identify this app in the URL
+    # Display name for the apps related API calls, this name is used to identify this app in the URL.
+    # Model related actions use the app_label from Meta as display name.
+    # The API calls here are not attached to any model.
     display_name = None
 
     # List of public actions (authentication required) available for this application

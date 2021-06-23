@@ -64,8 +64,7 @@ class AppActionsPermission(BasePermission):
 
     def has_permission(self, request, view):
         perms = self.get_required_permissions(request.method, None)
-
-        if (request.user and (request.user.is_authenticated() or not self.authenticated_users_only) and
+        if (request.user and (request.user.is_authenticated or not self.authenticated_users_only) and
                 request.user.has_perms(perms)):
             return True
 
@@ -82,7 +81,7 @@ class RestAPIBaseView(APIView):
         try:
             try:
                 # Assign current user for other modules to use
-                CurrentUserMiddleware().process_request(request)
+                CurrentUserMiddleware(None).process_request(request)
 
                 # Get HTTP method
                 fn = getattr(self, '_' + request.method.lower())

@@ -5,8 +5,9 @@ from draalcore.app_config import BaseAppConfig
 
 
 class AdminConfig(BaseAppConfig):
+    default = True
     name = 'draalcore.test_apps.admin'
-    label = 'draalcore.test_apps.admin'
+    label = 'draalcore_test_apps_admin'
     display_name = 'admin'
 
     def ready(self):

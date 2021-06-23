@@ -12,14 +12,14 @@ with open('package.json') as json_data:
     APP_VERSION = json.load(json_data)['version']
 
 install_requires = [
-    'django>=1.9,<2.0',
-    'djangorestframework==3.7.7',
-    'six>=1.10.0,<2dev',
-    'celery>=3.1.23,<4dev',
-    'httplib2>=0.10.3,<1dev',
+    'django>=3.2.4,<3.3',
+    'djangorestframework==3.12.4',
+    'six>=1.16.0,<2dev',
+    'celery>=5.1.0,<4dev',
+    'httplib2>=0.19.1,<1dev',
     'google-api-python-client==1.6.5',
     'oauth2',
-    'requests-oauthlib==0.7.0',
+    'requests-oauthlib==0.8.0',
     'onedrivesdk==1.1.8',
 ]
 
@@ -64,8 +64,6 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7'
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4'
         'Programming Language :: Python :: 3.5'

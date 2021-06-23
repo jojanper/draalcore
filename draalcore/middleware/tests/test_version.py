@@ -8,29 +8,35 @@ from django.http import HttpRequest, HttpResponse
 from django.conf import settings
 
 # Project imports
-from draalcore.test_utils.basetest import BaseTest
+from draalcore.test_utils.basetest import BaseTestMiddleware
 from ..version import ApplicationVersionMiddleware, VERSION_COOKIE_NAME
 
 
 logger = logging.getLogger(__name__)
 
 
-class ApplicationVersionTestCase(BaseTest):
+class ApplicationVersionTestCase(BaseTestMiddleware):
     """Application version middleware."""
+
+    def get_response(self, request):
+        self.responseFuncCalled += 1
+        return HttpResponse()
 
     def test_request(self):
         """Version is validated."""
 
-        obj = ApplicationVersionMiddleware()
+        obj = ApplicationVersionMiddleware(self.get_response)
 
         # GIVEN request has no application version cookie
         request = HttpRequest()
 
         # WHEN request is processed by the application version middleware
-        resp = obj.process_request(request)
+        resp = obj(request)
 
         # THEN error code should be returned
         self.assertEqual(resp.status_code, 418)
+
+        self.clear_response()
 
         # ----------
 
@@ -38,21 +44,13 @@ class ApplicationVersionTestCase(BaseTest):
         request.COOKIES['app-version'] = settings.APP_VERSION
 
         # WHEN request is processed by the application version middleware
-        resp = obj.process_request(request)
+        response = obj(request)
 
         # THEN it should succeed
-        self.assertEqual(resp, None)
+        self.assertTrue(response)
+        self.assertEqual(self.responseFuncCalled, 1)
 
-    def test_response(self):
-        """Response contains application version."""
-
-        obj = ApplicationVersionMiddleware()
-
-        # GIVEN HTTP response
-        response = HttpResponse()
-
-        # WHEN response is processed by the application version middleware
-        response = obj.process_response(None, response)
-
-        # THEN application version cookie should be present
+        # AND application version cookie should be present in the response
         self.assertTrue(VERSION_COOKIE_NAME in response.cookies)
+
+        self.clear_response()
