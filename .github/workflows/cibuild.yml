@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          pip install -U pip setuptools
           pip install impacket --upgrade --user
+          pip install -U pip setuptools
           npm run install-pytools
 
       - name: Build and test
