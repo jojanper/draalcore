@@ -3,7 +3,7 @@
 """Twitter OAuth interface."""
 
 # System imports
-import cgi
+from urllib.parse import parse_qsl
 import logging
 try:
     from urllib import urlencode
@@ -53,7 +53,7 @@ class TwitterOAuth(Base3rdPartyAuth):
             self.login_failure()
 
         # Store the request token in a session for later use.
-        request.session['request_token'] = dict(cgi.parse_qsl(content))
+        request.session['request_token'] = dict(parse_qsl(content))
 
         # Redirect the user to the authentication URL on Twitter.
         return '{}?oauth_token={}&{}'.format(authenticate_url, request.session['request_token']['oauth_token'], params)
@@ -82,7 +82,7 @@ class TwitterOAuth(Base3rdPartyAuth):
             self.login_failure()
 
         # Get user details from Twitter
-        access_token = dict(cgi.parse_qsl(content))
+        access_token = dict(parse_qsl(content))
         auth = OAuth1(settings.TWITTER_TOKEN, settings.TWITTER_SECRET,
                       access_token['oauth_token'], access_token['oauth_token_secret'])
         response = requests.get(verify_credentials_url, auth=auth)
