@@ -23,6 +23,7 @@ jobs:
         run: |
           npm install
           pip install -U pip setuptools
+          pip install impacket --upgrade --user
           npm run install-pytools
 
       - name: Build and test
