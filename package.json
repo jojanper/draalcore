@@ -30,7 +30,7 @@
   "author": "Juha Ojanpera juha.ojanpera@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "log-symbols": "^1.0.2"
   }
 }
