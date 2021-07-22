@@ -3,7 +3,6 @@
 """Custom model fields"""
 
 # System imports
-import six
 import inspect
 import logging
 from itertools import chain
@@ -136,7 +135,7 @@ class BaseFieldType(object):
 
 class StringFieldType(BaseFieldType):
     """Field data should be string."""
-    type = six.string_types
+    type = str
     type_description = 'string'
 
 

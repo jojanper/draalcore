@@ -4,7 +4,6 @@
 
 # System imports
 import sys
-import six
 import abc
 import logging
 import datetime
@@ -36,7 +35,7 @@ def get_module(module):
     return getattr(sys.modules, module, importlib.import_module(module))
 
 
-class BaseAction(object):
+class BaseAction(abc.ABC):
     """
     Base class for action execution.
 
@@ -129,14 +128,14 @@ class CreateActionWithParameters(CreateAction):
     def _validate_parameters(self):
         """Validate data parameters, raise DataParsingError on error"""
         errors = []
-        for key in six.iterkeys(self.PARAMETERS):
+        for key in self.PARAMETERS.keys():
             if key not in self.request_obj.data_params:
                 errors.append(key)
 
         if errors:
             raise DataParsingError('Following data items are missing: {}'.format(', '.join(errors)))
 
-        for key, params in six.iteritems(self.PARAMETERS):
+        for key, params in self.PARAMETERS.items():
             params[0].validate_type(key, self.request_obj.data_params.get(key), params[1])
 
     def execute(self, *args, **kwargs):
@@ -177,7 +176,6 @@ class DeleteAction(EditAction):
         return None
 
 
-@six.add_metaclass(abc.ABCMeta)
 class AbstractModelGetAction(BaseAction):
     """HTTP GET action for models."""
 
@@ -188,7 +186,6 @@ class AbstractModelGetAction(BaseAction):
         """Must be defined in the implementing class"""
 
 
-@six.add_metaclass(abc.ABCMeta)
 class AbstractModelItemGetAction(EditAction):
     """HTTP GET action for model item."""
 
@@ -616,7 +613,7 @@ class SystemAppsListingHandler(GetMixin, RestAPIBasicAuthView):
         # UI only application views but enabled from backend
         if hasattr(settings, 'UI_APPLICATION_MODELS'):
             for item in settings.UI_APPLICATION_MODELS:
-                for app, _models in six.iteritems(item):
+                for app, _models in item.items():
                     for model in _models:
                         data.append({'app_label': app, 'model': model['name'], 'actions': {}})
 
@@ -632,7 +629,7 @@ class SystemAppsPublicListingHandler(RestAPINoAuthView, SystemAppsListingHandler
         for item in super(SystemAppsPublicListingHandler, self)._get(request_obj).data:
             public_item = item.copy()
             public_item['actions'] = {}
-            for action, action_data in six.iteritems(item['actions']):
+            for action, action_data in item['actions'].items():
                 # Include only public actions
                 if not action_data.get('authenticate', True):
                     public_item['actions'][action] = action_data

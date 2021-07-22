@@ -3,7 +3,6 @@
 """Manager implementations for application models"""
 
 # System imports
-import six
 import logging
 import inspect
 from django.db import models
@@ -336,7 +335,7 @@ class BaseManager(models.Manager, SearchMixin):
         obj = self.create(**create_params)
 
         # Create related fields
-        for field, value in six.iteritems(related_params):
+        for field, value in related_params.items():
             if value:
                 getattr(obj, field).add(*value)
                 obj.create_related_event(field, value)
@@ -368,7 +367,7 @@ class BaseManager(models.Manager, SearchMixin):
         model_obj.set_values(**edit_params)
 
         # Edit related fields
-        for field, value in six.iteritems(related_params):
+        for field, value in related_params.items():
             rel_obj = getattr(model_obj, field)
 
             # Determine if data is changed

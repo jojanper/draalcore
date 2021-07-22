@@ -14,7 +14,6 @@ with open('package.json') as json_data:
 install_requires = [
     'django>=3.2.4,<3.3',
     'djangorestframework==3.12.4',
-    'six>=1.16.0,<2dev',
     'celery>=5.1.0,<5.2',
     'httplib2>=0.19.1,<1dev',
     'google-api-python-client==1.6.5',
