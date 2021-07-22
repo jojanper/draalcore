@@ -14,8 +14,8 @@ This installs NPM, virtualenv and library (both npm and python) dependencies. De
 is 3.6. To install other python versions under virtualenv:
 
 ```
-npm run setup -- --virtualname=virtualenv3.8 --python=/usr/bin/python3.8
-source virtualenv3.8/draalcore/bin/activate
+npm run setup -- --virtualname=virtualenv3.6 --python=/usr/bin/python3.6
+source virtualenv3.6/draalcore/bin/activate
 ```
 
 ### Run Python code styling
