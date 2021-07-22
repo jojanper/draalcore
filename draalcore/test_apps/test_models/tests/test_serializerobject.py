@@ -3,7 +3,6 @@
 """Model serializer object related tests"""
 
 # System imports
-import six
 import logging
 import importlib
 from mock import patch, MagicMock
@@ -102,7 +101,7 @@ class ModelSerializerObjectTestCase(TestModelMixin, BaseTestUser):
         self.assertTrue(response.success)
 
         # AND correct data is returned
-        keys = [item for item in six.iterkeys(response.data[0])]
+        keys = response.data[0].keys()
         self.assertEqual(len(keys), 2)
         self.assertEqual(set(keys), set(['request_user', 'name']))
 

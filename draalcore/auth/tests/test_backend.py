@@ -1,40 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mock import MagicMock
-from django.contrib.auth.models import User
+from django.http import HttpRequest
 
-from draalcore.test_utils.basetest import BaseTest
+from draalcore.test_utils.basetest import BaseTest, create_user
 from draalcore.auth.backend import GoogleOAuth2Backend, TwitterOAuthBackend, FacebookOAuthBackend, OneDriveOAuth2Backend
 
 
 class BackendTestCaseMixin(object):
 
-    def backend_validation(self, obj, response, ref_username):
+    def backend_validation(self, obj, ref_username):
 
-        count = User.objects.all().count()
+        request = HttpRequest()
+        request.META['IS_SOCIAL'] = True
 
         # GIVEN authentication response from remote site
 
         # WHEN user is authenticated
-        user = obj.authenticate(response)
+        user = obj.authenticate(request, username=ref_username)
 
         # THEN it should succeed
         self.assertEqual(user.username, ref_username)
-
-        # AND user is added to system
-        self.assertEqual(count + 1, 1)
-
-        # -----
-
-        # WHEN user does another login
-        user = obj.authenticate(response)
-
-        # THEN it should succeed
-        self.assertEqual(user.username, ref_username)
-
-        # AND user count in the system remains the same
-        self.assertEqual(count + 1, 1)
 
         # -----
 
@@ -65,8 +51,9 @@ class GoogleOAuth2BackendTestCase(BackendTestCaseMixin, BaseTest):
             'family_name': 'case',
             'email': 'test@case.com'
         }
-
-        self.backend_validation(GoogleOAuth2Backend(), response, 'google-{}'.format(response['id']))
+        username = 'google-{}'.format(response['id'])
+        create_user(username, 'testpassword', response['email'])
+        self.backend_validation(GoogleOAuth2Backend(), username)
 
 
 class TwitterOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
@@ -81,7 +68,9 @@ class TwitterOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
             'email': 'test@case.com'
         }
 
-        self.backend_validation(TwitterOAuthBackend(), response, 'twitter-{}'.format(response['id']))
+        username = 'twitter-{}'.format(response['id'])
+        create_user(username, 'testpassword', response['email'])
+        self.backend_validation(TwitterOAuthBackend(), username)
 
 
 class FacebookOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
@@ -97,7 +86,9 @@ class FacebookOAuthBackendTestCase(BackendTestCaseMixin, BaseTest):
             'email': 'test@case.com'
         }
 
-        self.backend_validation(FacebookOAuthBackend(), response, 'fb-{}'.format(response['id']))
+        username = 'fb-{}'.format(response['id'])
+        create_user(username, 'testpassword', response['email'])
+        self.backend_validation(FacebookOAuthBackend(), username)
 
 
 class OneDriveOAuth2BackendTestCase(BackendTestCaseMixin, BaseTest):
@@ -106,7 +97,13 @@ class OneDriveOAuth2BackendTestCase(BackendTestCaseMixin, BaseTest):
         """OneDrive OAuth2 signed-in user authenticates to application"""
 
         # User details from OneDrive API
-        user = MagicMock(id=1, display_name="Test Test")
-        response = MagicMock(user=user)
+        response = {
+            'id': '123456',
+            'first_name': 'test',
+            'last_name': 'test',
+            'email': 'test@case.com'
+        }
 
-        self.backend_validation(OneDriveOAuth2Backend(), response, 'od-{}'.format(user.id))
+        username = 'od-{}'.format(response['id'])
+        create_user(username, 'testpassword', response['email'])
+        self.backend_validation(OneDriveOAuth2Backend(), username)

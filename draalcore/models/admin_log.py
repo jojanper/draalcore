@@ -9,8 +9,7 @@ Adapted from https://djangosnippets.org/snippets/2484/
 from django.contrib import admin
 from django.contrib.admin.models import DELETION
 from django.utils.html import escape
-from django.core.urlresolvers import reverse
-from django.core.urlresolvers import NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 
 
 class LogEntryAdmin(admin.ModelAdmin):

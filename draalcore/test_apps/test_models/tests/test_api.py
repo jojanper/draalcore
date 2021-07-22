@@ -4,6 +4,7 @@
 
 # System imports
 from mock import MagicMock
+import logging
 
 # Project imports
 from ..models import TestModel
@@ -13,6 +14,8 @@ from draalcore.rest.request_data import RequestData
 from draalcore.rest.response_data import ResponseData
 from draalcore.test_utils.basetest import BaseTestUser
 from draalcore.rest.mixins import FactoryDeleteMixin
+
+logger = logging.getLogger(__name__)
 
 
 class ResponseDataTestCase(BaseTestUser):
@@ -214,7 +217,7 @@ class HttpPostModelTestCase(TestModelMixin, BaseTestUser):
                 'comments': 'ok',
                 'model1': 1,
                 'model2': None,
-                'model3': None
+                'model3': []
             }, 'success'),
 
             # invalid post data
@@ -244,7 +247,7 @@ class HttpPostModelTestCase(TestModelMixin, BaseTestUser):
             self.assertTrue(getattr(response, param[2]))
 
             # AND proper response data should be present
-            if param[2] is 'success':
+            if param[2] == 'success':
                 self.assertEqual(len(response.data.keys()), 13)
 
     def test_model_item_many2many_creation(self):

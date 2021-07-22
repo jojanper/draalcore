@@ -29,6 +29,7 @@ class OneDriveOAuth2(Base3rdPartyAuth):
     Authentication using code flow: https://github.com/OneDrive/onedrive-api-docs/blob/master/auth/msa_oauth.md
     """
     PROVIDER = 'onedrive'
+    BACKEND = 'draalcore.auth.backend.OneDriveOAuth2Backend'
 
     def get_authorize_url(self, request):
         """Request and prepare URL for login using OneDrive account."""
@@ -36,6 +37,14 @@ class OneDriveOAuth2(Base3rdPartyAuth):
         auth_provider = onedrivesdk.AuthProvider(http_provider=http_provider, client_id=client_id, scopes=scopes)
         client = onedrivesdk.OneDriveClient(api_base_url, auth_provider, http_provider)
         return client.auth_provider.get_auth_url(self.get_callback_url())
+
+    def set_user(self, response):
+        return self.get_user({
+            'username': 'od-{}'.format(response.user.id),
+            'email': '',
+            'first_name': response.user.display_name,
+            'last_name': '',
+        })
 
     def authorize(self, request):
         # Abort if no authorization code available
@@ -62,5 +71,5 @@ class OneDriveOAuth2(Base3rdPartyAuth):
 
         # Authenticate user
         logger.debug(response._prop_dict)
-        kwargs = {'onedrive_response': response.owner}
-        return self.authenticate(request, **kwargs)
+        user = self.set_user(response.owner)
+        return self.authenticate(request, user.username)

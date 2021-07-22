@@ -30,13 +30,14 @@ UPLOAD_MEDIA_ROOT = 'build/test_upload/'
 LOGIN_EXEMPT_URLS += (r'^test-api',)  # noqa
 
 # No application version code checking used for tests
-if 'draalcore.middleware.version.ApplicationVersionMiddleware' in MIDDLEWARE_CLASSES:  # noqa
-    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)  # noqa
-    MIDDLEWARE_CLASSES.remove('draalcore.middleware.version.ApplicationVersionMiddleware')
+if 'draalcore.middleware.version.ApplicationVersionMiddleware' in MIDDLEWARE:  # noqa
+    MIDDLEWARE = list(MIDDLEWARE)  # noqa
+    MIDDLEWARE.remove('draalcore.middleware.version.ApplicationVersionMiddleware')
 
-# When you supply None as a value for an app, Django will consider the app as an app without migrations
-# regardless of an existing migrations submodule. This can be used, for example, in a test settings file
-# to skip migrations while testing (tables will still be created for the apps' models).
+# When you supply None as a value for an app, Django will consider the app as an app
+# without migrations regardless of an existing migrations submodule. This can be used,
+# for example, in a test settings file to skip migrations while testing (tables will
+# still be created for the apps' models).
 if 'test' in sys.argv[1:]:
     MIGRATION_MODULES = {
         'auth': None

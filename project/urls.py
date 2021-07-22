@@ -11,7 +11,7 @@ from django.contrib.auth import views as auth_views
 from draalcore.views.baseviews import BaseView
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2013-2016"
+__copyright__ = "Copyright 2013-2016,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -25,9 +25,9 @@ class DummyView(BaseView):
 
 urlpatterns = [
     url(r'^$', DummyView.as_view(), name='main-view'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^api/', include('draalcore.rest.urls')),
-    url(r'^login/$', auth_views.login, {'template_name': ''}, name='auth-login'),
+    url(r'^login/$', auth_views.LoginView.as_view(template_name=''), name='auth-login'),
     url(r'^settings$', DummyView.as_view(), name='settings-view'),
 ]
 

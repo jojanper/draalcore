@@ -3,7 +3,6 @@
 """Custom model fields"""
 
 # System imports
-import six
 import inspect
 import logging
 from itertools import chain
@@ -15,11 +14,30 @@ from django.db.models import ForeignKey
 from draalcore.exceptions import DataParsingError
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014-2015"
+__copyright__ = "Copyright 2014-2015,2012"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
 logger = logging.getLogger(__name__)
+
+
+def get_related_model(field):
+    """
+    Get related model from a model's field instance. If model field is, for example,
+    foreign key, then return the model the field is referencing, that is,
+    the related model.
+
+    Parameters
+    ----------
+    field
+       Field instance of a model.
+
+    Returns
+    -------
+    Object
+       Model of the field instance.
+    """
+    return field.remote_field.model
 
 
 class AppFieldMixin(object):
@@ -60,13 +78,13 @@ class AppFieldMixin(object):
             if str(caller) not in [Migration.__name__, 'clone']:
                 raise Exception('Field editing statuses are missing for %s; called from %s' % (self.__class__.__name__, caller))
 
-        super(AppFieldMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __getattr__(self, name):
         if name in self._attributes:
             return self._attributes[name]
 
-        return super(AppFieldMixin, self).__getattr__(name)
+        return super().__getattr__(name)
 
     @property
     def attributes(self):
@@ -117,7 +135,7 @@ class BaseFieldType(object):
 
 class StringFieldType(BaseFieldType):
     """Field data should be string."""
-    type = six.string_types
+    type = str
     type_description = 'string'
 
 
@@ -185,11 +203,12 @@ class AppModelCharField(AppFieldMixin, models.CharField):
 class ForeignKeyFieldMixin(AppFieldMixin):
     @property
     def attributes(self):
-        return {'model': self.rel.to._meta.db_table}
+        model = get_related_model(self)
+        return {'model': model._meta.db_table}
 
     @property
     def additional_attributes(self):
-        model = self.rel.to
+        model = get_related_model(self)
         data = {
             'selector': {
                 # From which URL to find the selection items
@@ -219,7 +238,8 @@ class AppModelForeignObjectKey(AppModelForeignKey):
     UI_TYPE = 'object'
 
     def recursive(self, serializer_cls):
-        meta_data = serializer_cls(self.rel.to).data
+        model = get_related_model(self)
+        meta_data = serializer_cls(model).data
         return {
             '$order': meta_data.keys(),
             '$types': meta_data
@@ -286,7 +306,7 @@ class AppModelFieldItem(object):
 
     @property
     def related_model(self):
-        return self.model._meta.get_field(self.field.name).rel.to
+        return get_related_model(self.model._meta.get_field(self.field.name))
 
     @property
     def fk(self):

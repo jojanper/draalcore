@@ -2,28 +2,27 @@
 # -*- coding: utf-8 -*-
 
 # Add profiling support
-from .settings import MIDDLEWARE_CLASSES, INSTALLED_APPS
+from .settings import MIDDLEWARE, INSTALLED_APPS
 
 # http://127.0.0.1:8000/?profile
-# MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.InstrumentMiddleware', )
+# MIDDLEWARE += ('draalcore.middleware.profile.InstrumentMiddleware', )
 
 # http://127.0.0.1:8000/?profiler
-# MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.ProfileMiddleware', )
+# MIDDLEWARE += ('draalcore.middleware.profile.ProfileMiddleware', )
 
 # http://127.0.0.1:8000/?__geordi__
-# MIDDLEWARE_CLASSES += ('draalcore.middleware.profile.VisorMiddleware', )
+# MIDDLEWARE += ('draalcore.middleware.profile.VisorMiddleware', )
 
-# http://127.0.0.1:8000/?__geordi__
-# MIDDLEWARE_CLASSES += ('draalcore.middleware.sql.SqldumpMiddleware', )
+# http://127.0.0.1:8000/?sqldump
+# MIDDLEWARE += ('draalcore.middleware.sql.SqldumpMiddleware', )
 
 # Required for RPC4Django authenticated method calls
-# MIDDLEWARE_CLASSES += ('django.contrib.auth.middleware.RemoteUserMiddleware', )
+# MIDDLEWARE += ('django.contrib.auth.middleware.RemoteUserMiddleware', )
 
 middleware = 'django.middleware.csrf.CsrfViewMiddleware'
-if middleware in MIDDLEWARE_CLASSES:
-    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-    MIDDLEWARE_CLASSES.remove(middleware)
-
+if middleware in MIDDLEWARE:
+    MIDDLEWARE = list(MIDDLEWARE)
+    MIDDLEWARE.remove(middleware)
 
 # Django debug toolbar
 ENABLE_DEBUG_TOOLBAR = False
@@ -31,7 +30,7 @@ ENABLE_DEBUG_TOOLBAR = False
 if ENABLE_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
     INSTALLED_APPS += ('debug_toolbar',)
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
 
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
@@ -66,7 +65,7 @@ LOCAL_TEMPLATE_LOADERS = (
 
 SESSION_COOKIE_NAME = 'devsessionid'
 
-SITE_URL = '{}://{}:8000'.format('http', 'localhost')
+SITE_URL = '{}://{}:8080'.format('http', 'localhost')
 
 # Callback URL for 3rd party authentication
 EXT_AUTH_CALLBACK_URL = '{}{}'.format(SITE_URL, '/api/apps/auth/public-actions/')

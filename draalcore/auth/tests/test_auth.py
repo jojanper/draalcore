@@ -2,14 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 try:
     import httplib
 except ImportError:
     import http.client as httplib
 from mock import patch, MagicMock
+from django.contrib.auth.models import User
 
 from draalcore.test_utils.rest_api import GenericAPI, AuthAPI
 from draalcore.test_utils.basetest import BaseTestUser
+
+
+logger = logging.getLogger(__name__)
 
 
 class AuthGoogleTestCase(BaseTestUser):
@@ -62,6 +67,8 @@ class AuthGoogleTestCase(BaseTestUser):
     def test_google_sign_in_callback(self, mock_flow_step2_exchange, mock_build, mock_token):
         """OAuth2 callback is called from Google sign-in"""
 
+        ref_count = User.objects.all().count()
+
         mock_flow_step2_exchange.return_value = MagicMock()
 
         data = {
@@ -97,10 +104,30 @@ class AuthGoogleTestCase(BaseTestUser):
         # THEN it should succeed
         self.assertTrue(response.moved_temporarily)
 
+        # AND user is added to system
+        count = User.objects.all().count()
+        self.assertEqual(count, ref_count + 1)
+
         # AND correct user details are available
         response = AuthAPI(self).user_details()
         self.validate_user_response(response.data)
         self.assertEqual(response.data['email'], data['email'])
+
+        # -----
+
+        # WHEN callback URL is called again with valid data
+        response = api.auth_callback('google', {
+            'state': 'N-CPRCh_6kb5VJyGx7UdEDoxNDczNjk5ODkwnextL21haW4=',
+            'client_id': 'client_id=abc.apps.googleusercontent.com',
+            'code': '4/fumUC1u3N8kret1jp1lXqbbPTt1OxJz7i-N0Dg3yh68'
+        })
+
+        # THEN it should succeed
+        self.assertTrue(response.moved_temporarily)
+
+        # AND no user is added to system
+        count = User.objects.all().count()
+        self.assertEqual(count, ref_count + 1)
 
 
 class TokenClient(object):

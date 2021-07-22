@@ -3,7 +3,7 @@
 """Twitter OAuth interface."""
 
 # System imports
-import cgi
+from urllib.parse import parse_qsl
 import logging
 try:
     from urllib import urlencode
@@ -32,6 +32,7 @@ verify_credentials_url = TWITTER_BASE_URL + '/1.1/account/verify_credentials.jso
 
 class TwitterOAuth(Base3rdPartyAuth):
     PROVIDER = 'twitter'
+    BACKEND = 'draalcore.auth.backend.TwitterOAuthBackend'
 
     def get_authorize_url(self, request):
         """Request and prepare URL for login using Twitter account."""
@@ -52,10 +53,18 @@ class TwitterOAuth(Base3rdPartyAuth):
             self.login_failure()
 
         # Store the request token in a session for later use.
-        request.session['request_token'] = dict(cgi.parse_qsl(content))
+        request.session['request_token'] = dict(parse_qsl(content))
 
         # Redirect the user to the authentication URL on Twitter.
         return '{}?oauth_token={}&{}'.format(authenticate_url, request.session['request_token']['oauth_token'], params)
+
+    def set_user(self, response):
+        return self.get_user({
+            'username': 'twitter-{}'.format(response['id']),
+            'email': '',
+            'first_name': response['name'],
+            'last_name': '',
+        })
 
     def authorize(self, request):
         if 'denied' in request.GET:
@@ -73,7 +82,7 @@ class TwitterOAuth(Base3rdPartyAuth):
             self.login_failure()
 
         # Get user details from Twitter
-        access_token = dict(cgi.parse_qsl(content))
+        access_token = dict(parse_qsl(content))
         auth = OAuth1(settings.TWITTER_TOKEN, settings.TWITTER_SECRET,
                       access_token['oauth_token'], access_token['oauth_token_secret'])
         response = requests.get(verify_credentials_url, auth=auth)
@@ -82,5 +91,5 @@ class TwitterOAuth(Base3rdPartyAuth):
 
         # Authenticate user
         logger.debug(response.json())
-        kwargs = {'twitter_response': response.json()}
-        return self.authenticate(request, **kwargs)
+        user = self.set_user(response.json())
+        return self.authenticate(request, user.username)

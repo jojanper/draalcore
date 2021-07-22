@@ -108,3 +108,17 @@ class BaseTestUser(BaseTest):
     def add_permission(self, permission):
         obj = self.user.groups.all()[0]
         obj.permissions.add(Permission.objects.get(codename=permission))
+
+
+class BaseTestMiddleware(BaseTest):
+    def setUp(self):
+        super(BaseTestMiddleware, self).setUp()
+        self.responseFuncCalled = 0
+
+    def get_response(self, request):
+        """Callable provided by Django during middleware processing, mock for testing"""
+        self.responseFuncCalled += 1
+        return True
+
+    def clear_response(self):
+        self.responseFuncCalled = 0

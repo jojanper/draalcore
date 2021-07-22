@@ -3,7 +3,6 @@
 """Manager implementations for application models"""
 
 # System imports
-import six
 import logging
 import inspect
 from django.db import models
@@ -11,12 +10,12 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 
 # Project imports
-from draalcore.models.fields import AppModelFieldParserIterator
+from draalcore.models.fields import AppModelFieldParserIterator, get_related_model
 from draalcore.middleware.current_user import get_current_user
 from draalcore.exceptions import DataParsingError, ModelManagerError
 
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014-2015"
+__copyright__ = "Copyright 2014-2015,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -154,7 +153,7 @@ class BaseManager(models.Manager, SearchMixin):
                 return None
 
             # Read the model data for specified field within the model definition
-            cls = self.model._meta.get_field(field_name).rel.to
+            cls = get_related_model(self.model._meta.get_field(field_name))
             return self.get_model(model=cls, model_kwargs=field_kwargs, only_fields=only_fields)
 
         except ModelManagerError:
@@ -336,7 +335,7 @@ class BaseManager(models.Manager, SearchMixin):
         obj = self.create(**create_params)
 
         # Create related fields
-        for field, value in six.iteritems(related_params):
+        for field, value in related_params.items():
             if value:
                 getattr(obj, field).add(*value)
                 obj.create_related_event(field, value)
@@ -368,7 +367,7 @@ class BaseManager(models.Manager, SearchMixin):
         model_obj.set_values(**edit_params)
 
         # Edit related fields
-        for field, value in six.iteritems(related_params):
+        for field, value in related_params.items():
             rel_obj = getattr(model_obj, field)
 
             # Determine if data is changed

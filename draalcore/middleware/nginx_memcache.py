@@ -15,7 +15,7 @@ NON_AUTHENTICATED_ID = '2'
 def page_version(request):
     try:
         user = getattr(request, 'user')
-        version = AUTHENTICATED_ID if user.is_authenticated() else NON_AUTHENTICATED_ID
+        version = AUTHENTICATED_ID if user.is_authenticated else NON_AUTHENTICATED_ID
     except AttributeError:
         version = NON_AUTHENTICATED_ID
 

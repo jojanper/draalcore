@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # System imports
-import six
 import logging
 
 # Project imports
@@ -42,7 +41,7 @@ class AdminAppTestCase(TestModelMixin, BaseTestUser):
 
         # -----
 
-        for action, data in six.iteritems(response.data):
+        for action, data in response.data.items():
 
             # WHEN calling available actions
             response = self.api.app_action(self.APP, action, data['method'], data=None)

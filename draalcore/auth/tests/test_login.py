@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
+
 from draalcore.test_utils.basetest import BaseTestUser
 
+logger = logging.getLogger(__name__)
 
-class AuthAPITestCase(BaseTestUser):
+
+class AuthApiTestCase(BaseTestUser):
     def test_login_failure(self):
         """Invalid credentials are provided for sign-in"""
 

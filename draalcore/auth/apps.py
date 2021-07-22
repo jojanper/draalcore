@@ -2,8 +2,9 @@ from draalcore.app_config import BaseAppConfig
 
 
 class AuthConfig(BaseAppConfig):
+    default = True
     name = 'draalcore.auth'
-    label = 'draalcore.auth'
+    label = 'draalcore_auth'
     display_name = 'auth'
 
     def ready(self):

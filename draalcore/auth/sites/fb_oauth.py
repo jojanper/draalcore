@@ -30,12 +30,21 @@ consumer = oauth.Consumer(key=settings.FACEBOOK_APP_ID, secret=settings.FACEBOOK
 
 class FacebookOAuth(Base3rdPartyAuth):
     PROVIDER = 'facebook'
+    BACKEND = 'draalcore.auth.backend.FacebookOAuthBackend'
 
     def get_authorize_url(self, request):
         """Request and prepare URL for login using Facebook account."""
         base_url = '{}?client_id={}&redirect_uri={}&scope={}'
         return base_url.format(FACEBOOK_REQUEST_TOKEN_URL, settings.FACEBOOK_APP_ID,
                                quote_plus(self.get_callback_url()), 'email')
+
+    def set_user(self, response):
+        return self.get_user({
+            'username': 'fb-{}'.format(response['id']),
+            'email': response['email'],
+            'first_name': response['first_name'],
+            'last_name': response['last_name'],
+        })
 
     def authorize(self, request):
 
@@ -59,7 +68,7 @@ class FacebookOAuth(Base3rdPartyAuth):
 
                 # Authenticate user
                 logger.debug(user_data)
-                kwargs = {'facebook_response': user_data}
-                return self.authenticate(request, **kwargs)
+                user = self.set_user(user_data)
+                return self.authenticate(request, user.username)
 
         self.login_failure()

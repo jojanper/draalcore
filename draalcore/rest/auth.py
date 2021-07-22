@@ -60,7 +60,7 @@ class RestAuthentication(authentication.BaseAuthentication):
         if f.is_valid():
             login(request._request, f.get_user())
             user = request._request.user
-            if user.is_authenticated() and user.is_active:
+            if user.is_authenticated and user.is_active:
                 return (request._request.user, None)
 
         raise exceptions.AuthenticationFailed('Invalid username or password')

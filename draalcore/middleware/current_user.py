@@ -4,8 +4,11 @@
 
 from threading import local
 
+# Project imports
+from draalcore.middleware.base import BaseMiddleware
+
 __author__ = "Juha Ojanpera"
-__copyright__ = "Copyright 2014"
+__copyright__ = "Copyright 2014,2021"
 __email__ = "juha.ojanpera@gmail.com"
 __status__ = "Development"
 
@@ -26,7 +29,7 @@ def get_current_request():
     return getattr(_thread_locals, "request", None)
 
 
-class CurrentUserMiddleware(object):
+class CurrentUserMiddleware(BaseMiddleware):
     def process_request(self, request):
         _thread_locals.user = request.user
         _thread_locals.request = request
