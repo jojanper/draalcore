@@ -3,7 +3,7 @@ flake8==3.9.2
 
 django==3.2.4
 djangorestframework==3.12.4
-celery==5.1.0
+celery==5.2.2
 httplib2==0.19.1
 google-api-python-client==1.6.5
 oauth2
